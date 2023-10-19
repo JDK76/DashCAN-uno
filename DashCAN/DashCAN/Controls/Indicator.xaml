@@ -18,7 +18,7 @@
                     <RotateTransform Angle="0" CenterX="200" CenterY="150"></RotateTransform>
                 </Grid.RenderTransform>
 
-                <Image Grid.Row="0" Grid.Column="0" Source="../Assets/Icons/highbeam.svg" Margin="2" Visibility="{Binding HighbeamIcon}"></Image>
+                <Image Grid.Row="0" Grid.Column="0" Source="ms-appx:///Assets/Icons/highbeam.svg" Margin="2" Visibility="{Binding HighbeamIcon}"></Image>
 
                 <!--<controls:DropShadowPanel Color="{Binding LeftGlowColour}" Margin="25" BlurRadius="20" ShadowOpacity="1">
                     <Path Width="350" Height="250" Fill="{Binding LeftBrush}" Data="M0,125 L200,0 L200,75 L350,75 L350,175 L200,175 L200,250 z" UseLayoutRounding="False">

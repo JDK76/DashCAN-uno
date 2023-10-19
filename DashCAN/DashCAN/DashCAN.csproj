@@ -73,4 +73,19 @@
 	  <UpToDateCheckInput Remove="Controls\SevenSegmentGroup.xaml" />
 	  <UpToDateCheckInput Remove="Controls\StackBar.xaml" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<Content Update="Assets\Icons\back.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="Assets\Icons\fuel.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="Assets\Icons\highbeam.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Update="Assets\Icons\temp.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 </Project>

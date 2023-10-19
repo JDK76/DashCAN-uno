@@ -70,8 +70,8 @@
                     </TextBlock.RenderTransform>
                 </TextBlock>
 
-                <Image Grid.Row="2" Grid.Column="3" Source="Assets/Icons/fuel.svg" Margin="0,70,0,110"></Image>
-                <Image Grid.Row="2" Grid.Column="5" Source="Assets/Icons/temp.svg" Margin="0,50,0,105"></Image>
+                <Image Grid.Row="2" Grid.Column="3" Source="ms-appx:///Assets/Icons/fuel.svg" Margin="0,70,0,110"></Image>
+                <Image Grid.Row="2" Grid.Column="5" Source="ms-appx:///Assets/Icons/temp.svg" Margin="0,50,0,105"></Image>
 
             </Grid>
         </Viewbox>
