@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "DashCAN",
+  "display": "standalone",
+  "name": "DashCAN",
+  "short_name": "DashCAN",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+	"DashCAN.Windows (Package)": {
+	  "commandName": "MsixPackage"
+	},
+	"DashCAN.Windows (Unpackaged)": {
+	  "commandName": "Project"
+	}
+  }
+}

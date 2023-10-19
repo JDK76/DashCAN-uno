@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="DashCAN.Controls.SevenSegment"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="520"
+    d:DesignWidth="405">
+
+    <Image>
+        <Image.Source>
+            <SvgImageSource UriSource="data:image/svg+xml,&lt;svg&gt;&lt;g transform='translate(30 30) scale(0.9)'&gt;&lt;path fill='rgb(255,0,0)' d='M 67.752674,216.41656 83.905262,79.920585 46.525328,49.051112 24.36943,219.07232 44.242537,244.9117 Z' /&gt;&lt;/g&gt;&lt;/svg&gt;" />
+        </Image.Source>
+    </Image>
+     <!--<Canvas x:Name="cnv" Width="405" Height="520">
+       <canvas:CanvasControl x:Name="container" Width="320" Height="500" Draw="container_Draw">
+            <canvas:CanvasControl.RenderTransform>
+                <CompositeTransform ScaleX="1.3" TranslateX="10" TranslateY="10"></CompositeTransform>
+            </canvas:CanvasControl.RenderTransform>
+        </canvas:CanvasControl>
+    </Canvas>-->
+</UserControl>

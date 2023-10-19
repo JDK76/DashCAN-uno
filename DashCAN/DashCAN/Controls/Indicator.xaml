@@ -1,0 +1,40 @@
+﻿<UserControl
+    x:Class="DashCAN.Controls.Indicator"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Viewbox Stretch="Fill">
+        <Grid Width="400" Height="300">
+            <Grid>
+                <Grid x:Name="glow"></Grid>
+            </Grid>
+            <Grid x:Name="background" Background="{Binding BackgroundBrush}" CornerRadius="20">
+                <Grid.RenderTransform>
+                    <RotateTransform Angle="0" CenterX="200" CenterY="150"></RotateTransform>
+                </Grid.RenderTransform>
+
+                <Image Grid.Row="0" Grid.Column="0" Source="../Assets/Icons/highbeam.svg" Margin="2" Visibility="{Binding HighbeamIcon}"></Image>
+
+                <!--<controls:DropShadowPanel Color="{Binding LeftGlowColour}" Margin="25" BlurRadius="20" ShadowOpacity="1">
+                    <Path Width="350" Height="250" Fill="{Binding LeftBrush}" Data="M0,125 L200,0 L200,75 L350,75 L350,175 L200,175 L200,250 z" UseLayoutRounding="False">
+                        <Path.RenderTransform>
+                            <CompositeTransform ScaleX="0.6" TranslateX="70"></CompositeTransform>
+                        </Path.RenderTransform>
+                    </Path>
+                </controls:DropShadowPanel>
+                <controls:DropShadowPanel Color="{Binding RightGlowColour}" Margin="25" BlurRadius="20" ShadowOpacity="1">
+                    <Path Width="350" Height="250" Fill="{Binding RightBrush}" Data="M350,125 L150,0 L150,75 L0,75 L0,175 L150,175 L150,250 z" UseLayoutRounding="False">
+                        <Path.RenderTransform>
+                            <CompositeTransform ScaleX="0.6" TranslateX="70"></CompositeTransform>
+                        </Path.RenderTransform>
+                    </Path>
+                </controls:DropShadowPanel>-->
+            </Grid>
+        </Grid>
+    </Viewbox>
+</UserControl>
