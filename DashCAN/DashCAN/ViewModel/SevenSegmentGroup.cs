@@ -43,5 +43,7 @@ namespace DashCAN.ViewModel
         {
             get { return Helpers.Brushes.SegmentBackgroundColour; }
         }
+
+        public static Thickness OuterMargin { get { return new Thickness(); } }
     }
 }

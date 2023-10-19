@@ -38,11 +38,14 @@ namespace DashCAN.Helpers
             basicRectVisual.IsVisible = visible;
             ElementCompositionPreview.SetElementChildVisual(glow, basicRectVisual);
 
+#if HAS_UNO
+#else
             // Create the drop shadow
             var shadow = compositor.CreateDropShadow();
             shadow.BlurRadius = blurRadius;
             shadow.Color = glowColour;
             basicRectVisual.Shadow = shadow;
+#endif
 
             // Return the grid container with the sprite visual as its tag
             glow.Tag = basicRectVisual;

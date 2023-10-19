@@ -55,11 +55,14 @@ namespace DashCAN.Controls
         {
             if (e.PropertyName == "Value" && VM != null)
             {
-                // Set the glow visibility for segments
-                for (var i = 1; i <= 10; i++)
+                if (Segments.Count == 10)
                 {
-                    var glow = Segments[i].Item2.Tag as SpriteVisual;
-                    if (glow != null) glow.IsVisible = VM.SegmentLit(i);
+                    // Set the glow visibility for segments
+                    for (var i = 1; i <= 10; i++)
+                    {
+                        var glow = Segments[i].Item2.Tag as SpriteVisual;
+                        if (glow != null) glow.IsVisible = VM.SegmentLit(i);
+                    }
                 }
             }
         }

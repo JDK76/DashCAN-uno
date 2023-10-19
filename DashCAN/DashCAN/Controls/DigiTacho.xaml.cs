@@ -64,11 +64,14 @@ namespace DashCAN.Controls
                 var compositor = ElementCompositionPreview.GetElementVisual(glowRect).Compositor;
                 var visual = compositor.CreateSpriteVisual();
                 visual.Size = new System.Numerics.Vector2(12, 9);
+#if HAS_UNO
+#else
                 var shadow = compositor.CreateDropShadow();
                 shadow.Color = Colors.Red;
                 shadow.BlurRadius = 10;
                 shadow.Opacity = 0;
                 visual.Shadow = shadow;
+#endif
                 ElementCompositionPreview.SetElementChildVisual(glowRect, visual);
 
                 // Add the LED (coloured rectangle)
@@ -167,16 +170,18 @@ namespace DashCAN.Controls
                 }
 
                 // Set the colour of the LED and its drop shadow
-                var led = LEDs[i];
-                led.Fill = new SolidColorBrush(colour);
-                if (led != null)
+                if (LEDs.TryGetValue(i, out var led))
                 {
+                    led.Fill = new SolidColorBrush(colour);
+#if HAS_UNO
+#else
                     var shadow = ((Microsoft.UI.Composition.SpriteVisual)led.Tag).Shadow as Microsoft.UI.Composition.DropShadow;
                     if (shadow != null)
                     {
                         shadow.Color = colour;
                         shadow.Opacity = isLit ? 1 : 0;
                     }
+#endif
                 }
             }
         }

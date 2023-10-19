@@ -28,6 +28,8 @@ namespace DashCAN.Controls
 
         private void VM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+#if HAS_UNO
+#else
             if (e.PropertyName == "Value" && VM != null)
             {
                 var shadow = (BackGlow?.Tag as SpriteVisual)?.Shadow as DropShadow;
@@ -37,6 +39,7 @@ namespace DashCAN.Controls
                     shadow.Color = VM.Value ? backBrush.Color : Colors.Transparent;
                 }
             }
+#endif
         }
     }
 }
