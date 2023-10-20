@@ -36,10 +36,9 @@
                 <controls:DigiTacho DataContext="{Binding Tachometer}"  Grid.ColumnSpan="3" Grid.RowSpan="3" Width="1700" Height="1700" Margin="220,-450,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"></controls:DigiTacho>
 
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Height="300" Background="{Binding BackgroundBrush, FallbackValue=Black}">
-                    <!--<Rectangle Width="530" Height="200" Margin="50" Fill="DarkKhaki" />-->
                     <controls:SevenSegmentGroup DataContext="{Binding VehicleSpeed}" Width="530" Height="200" Margin="50" ></controls:SevenSegmentGroup>
-                    <Grid Width="200" Height="300" Background="{Binding BackgroundBrush, FallbackValue=Black}">
-                        <TextBlock Margin="-30,0,0,40" VerticalAlignment="Bottom" FontFamily="Sqaure721 BT" FontSize="70" FontWeight="Bold" Text="km/h" Foreground="{Binding LitBrush, FallbackValue=Green}"></TextBlock>
+                    <Grid x:Name="speedText" Margin="-30,0,0,40" Width="200" Height="90" VerticalAlignment="Bottom" Background="{Binding BackgroundBrush, FallbackValue=Black}">
+                        <TextBlock VerticalAlignment="Bottom" FontFamily="Sqaure721 BT" FontSize="70" FontWeight="Bold" Text="km/h" Foreground="{Binding LitBrush, FallbackValue=Green}"></TextBlock>
                     </Grid>
                 </StackPanel>
 

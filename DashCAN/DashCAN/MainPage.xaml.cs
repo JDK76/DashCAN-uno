@@ -20,6 +20,15 @@ namespace DashCAN
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
             this.DataContext = new ViewModel.Main();
+
+            // Create glow around speed units text
+            var brush = (speedText.Children[0] as TextBlock)?.Foreground as SolidColorBrush;
+            if (brush != null)
+            {
+                var colour = brush.Color;
+                colour.A = 127;
+                Helpers.Glow.AddGlow(speedText, colour, 1, 150, true);
+            }
         }
 
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)

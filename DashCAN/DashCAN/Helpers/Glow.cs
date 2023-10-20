@@ -14,7 +14,11 @@ namespace DashCAN.Helpers
         {
             // Base element must be contained in a grid element, otherwise abort
             if (baseElement.Parent is not Grid parent) return null;
+            return CreateGlow(baseElement, parent, glowColour, glowMargin, blurRadius, visible);
+        }
 
+        public static Grid? CreateGlow(FrameworkElement baseElement, Grid parent, Color glowColour, float glowMargin, float blurRadius, bool visible = true)
+        { 
             // Create a new grid container with the same size and alignment as the base element
             var glow = new Grid()
             {
@@ -50,6 +54,29 @@ namespace DashCAN.Helpers
             // Return the grid container with the sprite visual as its tag
             glow.Tag = basicRectVisual;
             return glow;
+        }
+
+        public static void AddGlow(FrameworkElement element, Color glowColour, float glowMargin, float blurRadius, bool visible = true)
+        {
+            // Create a new sprite visial over the element
+            var compositor = ElementCompositionPreview.GetElementVisual(element).Compositor;
+            var basicRectVisual = compositor.CreateSpriteVisual();
+            basicRectVisual.Size = new Vector2((float)element.Width + glowMargin * 2, (float)element.Height + glowMargin * 2);
+            basicRectVisual.Offset = new Vector3(-glowMargin, -glowMargin, 0f);
+            basicRectVisual.IsVisible = visible;
+            ElementCompositionPreview.SetElementChildVisual(element, basicRectVisual);
+
+#if HAS_UNO
+#else
+            // Create the drop shadow
+            var shadow = compositor.CreateDropShadow();
+            shadow.BlurRadius = blurRadius;
+            shadow.Color = glowColour;
+            basicRectVisual.Shadow = shadow;
+#endif
+
+            // Return the element with the sprite visual as its tag
+            element.Tag = basicRectVisual;
         }
     }
 }
