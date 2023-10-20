@@ -58,6 +58,8 @@ namespace DashCAN.Helpers
 
         public static void AddGlow(FrameworkElement element, Color glowColour, float glowMargin, float blurRadius, bool visible = true)
         {
+#if HAS_UNO
+#else
             // Create a new sprite visial over the element
             var compositor = ElementCompositionPreview.GetElementVisual(element).Compositor;
             var basicRectVisual = compositor.CreateSpriteVisual();
@@ -66,17 +68,15 @@ namespace DashCAN.Helpers
             basicRectVisual.IsVisible = visible;
             ElementCompositionPreview.SetElementChildVisual(element, basicRectVisual);
 
-#if HAS_UNO
-#else
             // Create the drop shadow
             var shadow = compositor.CreateDropShadow();
             shadow.BlurRadius = blurRadius;
             shadow.Color = glowColour;
             basicRectVisual.Shadow = shadow;
-#endif
 
             // Return the element with the sprite visual as its tag
             element.Tag = basicRectVisual;
+#endif
         }
     }
 }
