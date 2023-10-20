@@ -38,7 +38,7 @@
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Height="300" Background="{Binding BackgroundBrush, FallbackValue=Black}">
                     <controls:SevenSegmentGroup DataContext="{Binding VehicleSpeed}" Width="530" Height="200" Margin="50" ></controls:SevenSegmentGroup>
                     <Grid x:Name="speedText" Margin="-30,0,0,40" Width="200" Height="90" VerticalAlignment="Bottom" Background="{Binding BackgroundBrush, FallbackValue=Black}">
-                        <TextBlock VerticalAlignment="Bottom" FontFamily="Sqaure721 BT" FontSize="70" FontWeight="Bold" Text="km/h" Foreground="{Binding LitBrush, FallbackValue=Green}"></TextBlock>
+                        <TextBlock VerticalAlignment="Bottom" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="70" Text="km/h" Foreground="{Binding LitBrush, FallbackValue=Green}"></TextBlock>
                     </Grid>
                 </StackPanel>
 
@@ -49,21 +49,21 @@
                 <controls:Indicator Grid.Row="0" Grid.Column="3" DataContext="{Binding HighBeam}" Width="170" Height="110" Margin="-70,0,0,220" HorizontalAlignment="Left" VerticalAlignment="Bottom"></controls:Indicator>
                 <controls:Indicator Grid.Row="0" Grid.Column="4" DataContext="{Binding Right}" Width="170" Height="110" Margin="-50,0,0,220" HorizontalAlignment="Left" VerticalAlignment="Bottom"></controls:Indicator>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Margin="560,100,0,0" Text="SPEED" Foreground="White" FontFamily="Square721 Cn BT" FontSize="50" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Width="160">
+                <TextBlock Grid.Row="1" Grid.Column="0" Margin="560,100,0,0" Text="SPEED" Foreground="White" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Width="160">
                     <TextBlock.RenderTransform>
                         <CompositeTransform ScaleX="1.4"></CompositeTransform>
                     </TextBlock.RenderTransform>
                 </TextBlock>
 
-                <TextBlock Grid.Row="1" FontFamily="Square721 Cn BT" FontSize="50" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,240,-70">
+                <TextBlock Grid.Row="1" FontSize="50" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,240,-70">
                     <TextBlock.RenderTransform>
                         <CompositeTransform ScaleX="1.4"></CompositeTransform>
                     </TextBlock.RenderTransform>
-                    <Run Text="TACH" FontWeight="Bold"></Run>
-                    <Run Text=" x1000r/min"></Run>
+                    <Run Text="TACH" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT"></Run>
+                    <Run Text=" x1000r/min" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_condensed_bt.ttf#Square721 Cn BT"></Run>
                 </TextBlock>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" Text="ELECTRONIC DISPLAY" Foreground="White" FontFamily="Square721 Cn BT" FontSize="60" VerticalAlignment="Bottom" Margin="100,10,10,20">
+                <TextBlock Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" Text="ELECTRONIC DISPLAY" Foreground="White" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_condensed_bt.ttf#Square721 Cn BT" FontSize="60" VerticalAlignment="Bottom" Margin="100,10,10,20">
                     <TextBlock.RenderTransform>
                         <CompositeTransform SkewX="-5" ScaleX="1.5"></CompositeTransform>
                     </TextBlock.RenderTransform>

@@ -27,9 +27,9 @@
 
                     <Rectangle Grid.RowSpan="10" Margin="-12.5,-10,-12.5,-10" Stroke="{Binding Path=LitBrush, FallbackValue=Green}" StrokeThickness="10"></Rectangle>
 
-                    <TextBlock x:Name="topLabel" Grid.RowSpan="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-120,-35,0,0" FontSize="130" FontWeight="Bold" FontFamily="Square721 BT" Foreground="{Binding Path=LitBrush, FallbackValue=Green}" Text="{Binding MaxLabel, FallbackValue=F}"></TextBlock>
+                    <TextBlock x:Name="topLabel" Grid.RowSpan="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-120,-35,0,0" FontSize="130" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" Foreground="{Binding Path=LitBrush, FallbackValue=Green}" Text="{Binding MaxLabel, FallbackValue=F}"></TextBlock>
                     <Polygon x:Name="arrow" Grid.RowSpan="10" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-80,475,0,0" Points="0,0 40,25 0,50 0,0" Fill="{Binding Path=LitBrush, FallbackValue=Green}"></Polygon>
-                    <TextBlock x:Name="bottomLabel" Grid.RowSpan="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-120,-35,0,-30" FontSize="130" FontWeight="Bold" FontFamily="Square721 BT" Foreground="{Binding Path=LitBrush, FallbackValue=Green}" Text="{Binding MinLabel, FallbackValue=E}"></TextBlock>
+                    <TextBlock x:Name="bottomLabel" Grid.RowSpan="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-120,-35,0,-30" FontSize="130" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" Foreground="{Binding Path=LitBrush, FallbackValue=Green}" Text="{Binding MinLabel, FallbackValue=E}"></TextBlock>
 
                     <Rectangle Grid.Row="9" Margin="5" x:Name="seg1" Fill="{Binding Path=Seg1Fill, FallbackValue=#001500}"></Rectangle>
                     <Rectangle Grid.Row="8" Margin="5" x:Name="seg2" Fill="{Binding Path=Seg2Fill, FallbackValue=#001500}"></Rectangle>

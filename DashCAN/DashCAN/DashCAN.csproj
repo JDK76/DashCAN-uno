@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) or '$(EnableWindowsTargeting)' == 'true'">$(TargetFrameworks);net7.0-windows10.0.19041</TargetFrameworks>
 		<TargetFrameworks>$(TargetFrameworks);net7.0;</TargetFrameworks>
@@ -54,7 +54,10 @@
 	</Choose>
 
 	<ItemGroup>
-		<UnoImage Include="Assets\**\*.svg" />
+		<Content Include="Assets\Icons\*.svg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Assets\Fonts\*.ttf" />
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
 
@@ -72,20 +75,5 @@
 	  <UpToDateCheckInput Remove="Controls\SevenSegment.xaml" />
 	  <UpToDateCheckInput Remove="Controls\SevenSegmentGroup.xaml" />
 	  <UpToDateCheckInput Remove="Controls\StackBar.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Update="Assets\Icons\back.svg">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Icons\fuel.svg">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Icons\highbeam.svg">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Update="Assets\Icons\temp.svg">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
 	</ItemGroup>
 </Project>

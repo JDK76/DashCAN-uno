@@ -114,7 +114,7 @@ namespace DashCAN.Controls
                         VerticalAlignment = VerticalAlignment.Center,
                         TextAlignment = TextAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
-                        FontFamily = new FontFamily("Square721 Cn BT"),
+                        FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_condensed_bt.ttf#Square721 Cn BT"),
                         FontSize = 18,
                         Text = rpm.ToString(),
                         RenderTransform = new CompositeTransform() { ScaleX = 1.8, TranslateX = -10 }
