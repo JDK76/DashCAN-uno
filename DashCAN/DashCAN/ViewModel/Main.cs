@@ -23,18 +23,26 @@
             Left.Value = (Value % 10 > 5);
             Right.Value = (Value % 10 > 5);
 
+            DoorOpen.Value = ((Value + 0) % 10 > 5);
+            ParkBrake.Value = ((Value + 1) % 10 > 5);
+            Oil.Value = ((Value + 2) % 10 > 5);
+            Battery.Value = ((Value + 3) % 10 > 5);
+            Fuel.Value = ((Value + 4) % 10 > 5);
+            Engine.Value = ((Value + 5) % 10 > 5);
+            Brake.Value = ((Value + 6) % 10 > 5);
+
             Value += increment;
             if (Value >= 100 || Value <= 0) increment *= -1;
         }
 
         public static Brush BackgroundBrush
         {
-            get { return Helpers.Brushes.SegmentBackgroundColour; }
+            get { return Helpers.Brushes.SegmentBackground; }
         }
 
         public static Brush LitBrush
         {
-            get { return Helpers.Brushes.SegmentLitColour; }
+            get { return Helpers.Brushes.SegmentLit; }
         }
 
         public DigiTacho Tachometer { get; set; } = new();
@@ -50,5 +58,19 @@
         public Indicator Left { get; set; } = new(IndicatorType.Left);
 
         public Indicator Right { get; set; } = new(IndicatorType.Right);
+
+        public Warning DoorOpen { get; set; } = new Warning(WarningType.DoorOpen);
+
+        public Warning ParkBrake { get; set; } = new Warning(WarningType.ParkBrake);
+
+        public Warning Oil { get; set; } = new Warning(WarningType.Oil);
+
+        public Warning Battery { get; set; } = new Warning(WarningType.Battery);
+
+        public Warning Fuel { get; set; } = new Warning(WarningType.Fuel);
+
+        public Warning Engine { get; set; } = new Warning(WarningType.Engine);
+
+        public Warning Brake { get; set; } = new Warning(WarningType.Brake);
     }
 }

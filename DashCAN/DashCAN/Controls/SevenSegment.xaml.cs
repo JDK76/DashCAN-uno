@@ -26,7 +26,7 @@ namespace DashCAN.Controls
                 var segmentGlow = grd.FindName($"seg{i}glow") as Grid;
                 if (segmentGlow != null)
                 {
-                    Helpers.Glow.AddGlow(segmentGlow, Helpers.Brushes.SegmentLitColour.Color, 1, 100, false);
+                    Helpers.Glow.AddGlow(segmentGlow, Helpers.Brushes.SegmentLit.Color, 1, 100, false);
                 }
             }
         }

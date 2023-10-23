@@ -3,27 +3,25 @@ using Microsoft.UI.Composition;
 
 namespace DashCAN.Controls
 {
-    public sealed partial class Indicator : UserControl
+    public sealed partial class HighBeam : UserControl
     {
         private Grid? BackGlow { get; set; }
         private ViewModel.Indicator? VM { get; set; }
 
-        public Indicator()
+        public HighBeam()
         {
             this.InitializeComponent();
-            this.Loaded += Indicator_Loaded;
-            this.DataContextChanged += Indicator_DataContextChanged;
+            this.DataContextChanged += HighBeam_DataContextChanged;
         }
 
-        private void Indicator_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
+        private void HighBeam_DataContextChanged(FrameworkElement sender, DataContextChangedEventArgs args)
         {
             VM = this.DataContext as ViewModel.Indicator;
-            if (VM != null) VM.PropertyChanged += VM_PropertyChanged;
-        }
-
-        private void Indicator_Loaded(object sender, RoutedEventArgs e)
-        {
-            BackGlow = Helpers.Glow.CreateGlow(glow, Colors.Transparent, 2.5f, 250);
+            if (VM != null)
+            {
+                VM.PropertyChanged += VM_PropertyChanged;
+                BackGlow = Helpers.Glow.CreateGlow(glow, Colors.Transparent, 12.5f, 100);
+            }
         }
 
         private void VM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -35,7 +33,7 @@ namespace DashCAN.Controls
                 var shadow = (BackGlow?.Tag as SpriteVisual)?.Shadow as DropShadow;
                 if (shadow != null)
                 {
-                    var backBrush = (VM.IndicatorBrush as SolidColorBrush) ?? new SolidColorBrush(Colors.Transparent);
+                    var backBrush = (VM.HighBeamBrush as SolidColorBrush) ?? new SolidColorBrush(Colors.Transparent);
                     shadow.Color = VM.Value ? backBrush.Color : Colors.Transparent;
                 }
             }

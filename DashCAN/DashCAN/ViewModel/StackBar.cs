@@ -41,12 +41,12 @@ namespace DashCAN.ViewModel
 
         public static Brush BackgroundBrush
         {
-            get { return Helpers.Brushes.SegmentBackgroundColour; }
+            get { return Helpers.Brushes.SegmentBackground; }
         }
 
         public static Brush LitBrush
         {
-            get { return Helpers.Brushes.SegmentLitColour; }
+            get { return Helpers.Brushes.SegmentLit; }
         }
 
         private bool _globalUnlit;
@@ -108,7 +108,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(1) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(1) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -116,7 +116,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(2) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(2) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -124,7 +124,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(3) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(3) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -132,7 +132,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(4) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(4) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -140,7 +140,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(5) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(5) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -148,7 +148,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(6) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(6) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -156,7 +156,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(7) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(7) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -164,7 +164,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(8) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(8) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -172,7 +172,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(9) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(9) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 
@@ -180,7 +180,7 @@ namespace DashCAN.ViewModel
         {
             get
             {
-                return SegmentLit(10) ? Helpers.Brushes.SegmentLitColour : Helpers.Brushes.SegmentUnlitColour;
+                return SegmentLit(10) ? Helpers.Brushes.SegmentLit : Helpers.Brushes.SegmentUnlit;
             }
         }
 

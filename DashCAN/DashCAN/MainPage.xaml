@@ -3,17 +3,19 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:local="using:DashCAN"
     xmlns:controls="using:DashCAN.Controls"
+    xmlns:icons="using:DashCAN.Assets.Icons"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d">
 
     <Grid>
         <Viewbox StretchDirection="Both" Stretch="Uniform">
-            <Grid Width="3150" Height="1300">
+            <Grid Width="3150" Height="1400">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="500"></RowDefinition>
                     <RowDefinition Height="500"></RowDefinition>
                     <RowDefinition Height="300"></RowDefinition>
+                    <RowDefinition Height="100"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -46,7 +48,7 @@
                 <controls:StackBar Grid.Row="1" Grid.Column="5" DataContext="{Binding CoolantTemperature}"></controls:StackBar>
 
                 <controls:Indicator Grid.Row="0" Grid.Column="0" DataContext="{Binding Left}" Width="170" Height="110" Margin="400,0,0,220" HorizontalAlignment="Left" VerticalAlignment="Bottom"></controls:Indicator>
-                <controls:Indicator Grid.Row="0" Grid.Column="3" DataContext="{Binding HighBeam}" Width="170" Height="110" Margin="-70,0,0,220" HorizontalAlignment="Left" VerticalAlignment="Bottom"></controls:Indicator>
+                <controls:HighBeam Grid.Row="0" Grid.Column="3" DataContext="{Binding HighBeam}" Width="170" Height="110" Margin="-70,0,0,220" HorizontalAlignment="Left" VerticalAlignment="Bottom" />
                 <controls:Indicator Grid.Row="0" Grid.Column="4" DataContext="{Binding Right}" Width="170" Height="110" Margin="-50,0,0,220" HorizontalAlignment="Left" VerticalAlignment="Bottom"></controls:Indicator>
 
                 <TextBlock Grid.Row="1" Grid.Column="0" Margin="560,100,0,0" Text="SPEED" Foreground="White" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="50" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" Width="160">
@@ -69,9 +71,29 @@
                     </TextBlock.RenderTransform>
                 </TextBlock>
 
-                <Image Grid.Row="2" Grid.Column="3" Source="ms-appx:///Assets/Icons/fuel.svg" Margin="0,70,0,110"></Image>
-                <Image Grid.Row="2" Grid.Column="5" Source="ms-appx:///Assets/Icons/temp.svg" Margin="0,50,0,105"></Image>
+                <icons:Fuel Grid.Row="2" Grid.Column="3" IconColour="White" Margin="0,70,0,110" />
+                <icons:Temperature Grid.Row="2" Grid.Column="5" IconColour="White" Margin="0,50,0,105" />
 
+                <Grid Grid.Row="3" Grid.ColumnSpan="7">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="125"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    <controls:Warning Grid.Column="0" DataContext="{Binding DoorOpen}" />
+                    <controls:Warning Grid.Column="1" DataContext="{Binding ParkBrake}" />
+                    <controls:Warning Grid.Column="3" DataContext="{Binding Oil}" />
+                    <controls:Warning Grid.Column="4" DataContext="{Binding Battery}" />
+                    <controls:Warning Grid.Column="5" DataContext="{Binding Fuel}" />
+                    <controls:Warning Grid.Column="6" DataContext="{Binding Engine}" />
+                    <controls:Warning Grid.Column="6" DataContext="{Binding Brake}" />
+                </Grid>
             </Grid>
         </Viewbox>
     </Grid>

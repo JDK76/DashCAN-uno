@@ -1,7 +1,4 @@
-﻿using Microsoft.UI;
-using Windows.UI;
-
-namespace DashCAN.ViewModel
+﻿namespace DashCAN.ViewModel
 {
     public class Indicator : ViewModelBase
     {
@@ -21,67 +18,29 @@ namespace DashCAN.ViewModel
         public bool Value
         {
             get { return _value; }
-            set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { "BackgroundBrush", "LeftGlowColour", "LeftBrush", "RightGlowColour", "RightBrush" }); }
+            set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { nameof(HighBeamBrush), nameof(LeftBrush), nameof(RightBrush) }); }
         }
 
-        public static Color HighbeamColour { get { return Color.FromArgb(255, 13, 107, 229); } }
-
-        public Brush BackgroundBrush
-        {
-            get
-            {
-                if (Type == IndicatorType.HighBeam)
-                    return Value ? new SolidColorBrush(Indicator.HighbeamColour) : Helpers.Brushes.SegmentBackgroundColour;
-                else
-                    return Helpers.Brushes.Transparent;
-            }
-        }
-
-        public Visibility HighbeamIcon
-        {
-            get { return Type == IndicatorType.HighBeam ? Visibility.Visible : Visibility.Collapsed; }
-        }
-
-        public Color LeftColour
-        {
-            get
-            {
-                if (Type == IndicatorType.Left)
-                    return Value ? Colors.Green : Helpers.Brushes.SegmentBackgroundColour.Color;
-                else
-                    return Colors.Transparent;
-            }
-        }
-
-        public Color LeftGlowColour
-        {
-            get { return Value ? LeftColour : Colors.Transparent; }
-        }
+        public Brush HighBeamBrush { get { return Value ? Helpers.Brushes.HighBeam : Helpers.Brushes.SegmentBackground; } }
 
         public Brush LeftBrush
         {
-            get { return new SolidColorBrush(LeftColour); }
-        }
-
-        public Color RightColour
-        {
             get
             {
-                if (Type == IndicatorType.Right)
-                    return Value ? Colors.Green : Helpers.Brushes.SegmentBackgroundColour.Color;
-                else
-                    return Colors.Transparent;
+                if (Type != IndicatorType.Left) return Helpers.Brushes.Transparent;
+                return Value ? IndicatorBrush : Helpers.Brushes.SegmentBackground;
             }
-        }
-
-        public Color RightGlowColour
-        {
-            get { return Value ? RightColour : Colors.Transparent; }
         }
 
         public Brush RightBrush
         {
-            get { return new SolidColorBrush(RightColour); }
+            get
+            {
+                if (Type != IndicatorType.Right) return Helpers.Brushes.Transparent;
+                return Value ? IndicatorBrush : Helpers.Brushes.SegmentBackground;
+            }
         }
+
+        public Brush IndicatorBrush => Helpers.Brushes.Indicator;
     }
 }

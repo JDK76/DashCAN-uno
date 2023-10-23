@@ -7,4 +7,16 @@
         Right,
         HighBeam
     }
+
+    public enum WarningType
+    {
+        None,
+        DoorOpen,
+        ParkBrake,
+        Oil,
+        Battery,
+        Fuel,
+        Brake,
+        Engine
+    }
 }

@@ -72,9 +72,9 @@
                 if (prop != null)
                 {
                     if (IsLit(segNo))
-                        prop.SetValue(this, Helpers.Brushes.SegmentLitColour);
+                        prop.SetValue(this, Helpers.Brushes.SegmentLit);
                     else
-                        prop.SetValue(this, Helpers.Brushes.SegmentUnlitColour);
+                        prop.SetValue(this, Helpers.Brushes.SegmentUnlit);
                 }
             }
         }

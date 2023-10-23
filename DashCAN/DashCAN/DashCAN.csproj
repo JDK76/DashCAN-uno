@@ -54,26 +54,7 @@
 	</Choose>
 
 	<ItemGroup>
-		<Content Include="Assets\Icons\*.svg">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
 		<Content Include="Assets\Fonts\*.ttf" />
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Controls\DigiTacho.xaml" />
-	  <None Remove="Controls\Indicator.xaml" />
-	  <None Remove="Controls\SevenSegment.xaml" />
-	  <None Remove="Controls\SevenSegmentGroup.xaml" />
-	  <None Remove="Controls\StackBar.xaml" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <UpToDateCheckInput Remove="Controls\DigiTacho.xaml" />
-	  <UpToDateCheckInput Remove="Controls\Indicator.xaml" />
-	  <UpToDateCheckInput Remove="Controls\SevenSegment.xaml" />
-	  <UpToDateCheckInput Remove="Controls\SevenSegmentGroup.xaml" />
-	  <UpToDateCheckInput Remove="Controls\StackBar.xaml" />
 	</ItemGroup>
 </Project>
