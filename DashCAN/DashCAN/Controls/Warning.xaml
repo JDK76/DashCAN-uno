@@ -14,11 +14,14 @@
         <cnv:WarningTypeToVisibility x:Key="WarningTypeToVisibility" />
     </UserControl.Resources>
     
-    <Viewbox Stretch="Fill">
+    <Viewbox Stretch="Uniform">
         <Grid Width="400" Height="300">
+            <!-- Door Open -->
             <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=DoorOpen}">
                 <icons:DoorOpen IconColour="{Binding MainColour}" />
             </Viewbox>
+
+            <!-- Battery -->
             <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=Battery}">
                 <Canvas Height="100" Width="100">
                     <Polygon Fill="{Binding MainColour}" Points="68.5,55.3 72.8,55.3 72.8,50.4 77.7,50.4 77.7,46.1 72.8,46.1 72.8,41.2 68.5,41.2 68.5,46.1 63.6,46.1 63.6,50.4 68.5,50.4" />
@@ -26,17 +29,44 @@
                     <Rectangle Fill="{Binding MainColour}" Canvas.Left="21.8" Canvas.Top="46.1" Width="14.1" Height="4.2" />
                 </Canvas>
             </Viewbox>
+
+            <!-- Oil -->
             <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=Oil}">
                 <Canvas Height="100" Width="100">
                     <Path Fill="{Binding MainColour}" Data="M93.4,44.6l-5.8-5.7L60.6,51.6l-5.2-6.9H43.4v-2.5h6.8v-3.9H31.9v3.9h6.4v2.5h-8.8V39l-18.6-8.4L10.2,32L5,43.5l20.6,9.3V53  v16.4h37.2l19-23.3l4.7-2.5l3.3,3.6L93.4,44.6z M25.6,44.7v3.1l-15.2-6.9l2-4.4l13.2,6V44.7z M60.9,65.4H29.7V54.1v-5.3h8.6h1h4.1  h10.1l4,5.3l2,2.6l3-1.4l10.9-5.2L60.9,65.4z" />
                     <Path Fill="{Binding MainColour}" Data="M95,59.3c-0.1-0.8-0.3-1.4-0.5-1.9c-0.2-0.5-0.6-1.5-1.3-3l-1.9-4.2l-1.9,4.1c-0.1,0.2-1.1,2.4-1.4,3.1  c-0.2,0.4-0.4,1.1-0.5,1.9c-0.1,1.2,0.2,2.3,1,3.1c0.7,0.7,1.7,1.2,2.8,1.2c1.1,0,2.1-0.4,2.8-1.2C94.8,61.7,95.1,60.6,95,59.3z" />
                 </Canvas>
             </Viewbox>
+
+            <!-- Fuel -->
             <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=Fuel}">
                 <icons:Fuel IconColour="{Binding MainColour}" Margin="20" />
             </Viewbox>
+
+            <!-- Check Engine -->
             <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=Engine}">
                 <icons:CheckEngine IconColour="{Binding MainColour}" Margin="10" />
+            </Viewbox>
+            
+            <!-- Park Brake -->
+            <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=ParkBrake}">
+                <Grid Margin="40">
+                    <Grid.RenderTransform>
+                        <ScaleTransform ScaleY="0.8" CenterY="150" />
+                    </Grid.RenderTransform>
+                    <TextBlock Text="PARK" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="100" TextAlignment="Center" Foreground="{Binding MainColour}" Margin="0,0,0,100" Height="150" />
+                    <TextBlock Text="BRAKE" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="100" TextAlignment="Center" Foreground="{Binding MainColour}" Margin="0,100,0,0" Height="150" />
+                </Grid>
+            </Viewbox>
+            
+            <!-- Brake -->
+            <Viewbox Visibility="{Binding Path=Type, Converter={StaticResource WarningTypeToVisibility}, ConverterParameter=Brake}">
+                <Grid Margin="80">
+                    <Grid.RenderTransform>
+                        <ScaleTransform ScaleY="0.8" CenterY="150" />
+                    </Grid.RenderTransform>
+                    <TextBlock Text="BRAKE" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="100" TextAlignment="Center" Foreground="{Binding MainColour}" />
+                </Grid>
             </Viewbox>
         </Grid>
     </Viewbox>
