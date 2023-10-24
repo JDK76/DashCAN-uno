@@ -14,6 +14,6 @@
         }
 
         public static readonly DependencyProperty IconColourProperty =
-            DependencyProperty.Register(nameof(IconColour), typeof(Brush), typeof(Fuel), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(IconColour), typeof(Brush), typeof(Temperature), new PropertyMetadata(null));
     }
 }
