@@ -40,7 +40,7 @@
                 <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Height="300" Background="{Binding BackgroundBrush, FallbackValue=Black}">
                     <controls:SevenSegmentGroup DataContext="{Binding VehicleSpeed}" Width="530" Height="200" Margin="50" ></controls:SevenSegmentGroup>
                     <Grid x:Name="speedText" Margin="-30,0,0,40" Width="200" Height="90" VerticalAlignment="Bottom" Background="{Binding BackgroundBrush, FallbackValue=Black}">
-                        <TextBlock VerticalAlignment="Bottom" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bold_condensed_bt.ttf#Square721 Cn BT" FontSize="70" Text="km/h" Foreground="{Binding LitBrush, FallbackValue=Green}"></TextBlock>
+                        <TextBlock VerticalAlignment="Bottom" FontFamily="ms-appx:///DashCAN/Assets/Fonts/square_721_bt.ttf#Square721 BT" FontSize="80" FontWeight="Bold"  Text="km/h" Foreground="{Binding LitBrush, FallbackValue=Green}"></TextBlock>
                     </Grid>
                 </StackPanel>
 
@@ -74,7 +74,7 @@
                 <icons:Fuel Grid.Row="2" Grid.Column="3" IconColour="White" Margin="0,70,0,110" />
                 <icons:Temperature Grid.Row="2" Grid.Column="5" IconColour="White" Margin="0,50,0,105" />
 
-                <Grid Grid.Row="3" Grid.ColumnSpan="7">
+                <Grid Grid.Row="3" Grid.ColumnSpan="9">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="225"></ColumnDefinition>
                         <ColumnDefinition Width="225"></ColumnDefinition>
@@ -84,10 +84,12 @@
                         <ColumnDefinition Width="225"></ColumnDefinition>
                         <ColumnDefinition Width="225"></ColumnDefinition>
                         <ColumnDefinition Width="225"></ColumnDefinition>
+                        <ColumnDefinition Width="400"></ColumnDefinition>
+                        <ColumnDefinition Width="400"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
-                    <Grid Grid.ColumnSpan="9" Background="#222222" />
+                    <Grid Grid.ColumnSpan="11" Background="#222222" />
                     <controls:Warning Grid.Column="0" DataContext="{Binding DoorOpen}" />
                     <controls:Warning Grid.Column="1" DataContext="{Binding ParkBrake}" />
                     <controls:Warning Grid.Column="3" DataContext="{Binding Oil}" />
@@ -95,6 +97,7 @@
                     <controls:Warning Grid.Column="5" DataContext="{Binding Fuel}" />
                     <controls:Warning Grid.Column="6" DataContext="{Binding Engine}" />
                     <controls:Warning Grid.Column="7" DataContext="{Binding Brake}" />
+                    <controls:Clock Grid.Column="9" />
                 </Grid>
             </Grid>
         </Viewbox>

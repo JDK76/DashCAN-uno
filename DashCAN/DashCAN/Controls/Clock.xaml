@@ -1,0 +1,27 @@
+﻿<UserControl
+    x:Class="DashCAN.Controls.Clock"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:DashCAN.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    x:Name="_this"
+    d:DesignHeight="150"
+    d:DesignWidth="400">
+
+    <Grid x:Name="MarginGrid" Background="{Binding BackgroundBrush, FallbackValue=Black}" Padding="{Binding OuterMargin}">
+        <Viewbox StretchDirection="Both" Stretch="Uniform">
+            <StackPanel Orientation="Horizontal" Margin="200">
+                <local:SevenSegment DataContext="{Binding ElementName=_this, Path=Segment1}" />
+                <local:SevenSegment DataContext="{Binding ElementName=_this, Path=Segment2}" />
+                <Canvas Width="80" Margin="20,0,30,0">
+                    <Ellipse x:Name="tick1" Canvas.Left="40" Canvas.Top="80" Width="40" Height="40" Fill="#001500" />
+                    <Ellipse x:Name="tick2" Canvas.Left="00" Canvas.Top="380" Width="40" Height="40" Fill="#001500" />
+                </Canvas>
+                <local:SevenSegment DataContext="{Binding ElementName=_this, Path=Segment3}" />
+                <local:SevenSegment DataContext="{Binding ElementName=_this, Path=Segment4}" />
+            </StackPanel>
+        </Viewbox>
+    </Grid>
+</UserControl>
