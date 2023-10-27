@@ -36,6 +36,10 @@ namespace DashCAN
 
             // Ensure the current window is active
             MainWindow.Activate();
+
+#if HAS_UNO
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();
+#endif
         }
 
         /// <summary>

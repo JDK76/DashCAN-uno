@@ -31,6 +31,13 @@ namespace DashCAN
             }
         }
 
+        private void Grid_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+#if HAS_UNO
+            Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().ExitFullScreenMode();
+#endif
+        }
+
         private void MainPage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             DrawPattern();
