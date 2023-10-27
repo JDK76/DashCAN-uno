@@ -10,7 +10,7 @@
     d:DesignHeight="150"
     d:DesignWidth="400">
 
-    <Grid x:Name="MarginGrid" Background="{Binding BackgroundBrush, FallbackValue=Black}" Padding="{Binding OuterMargin}">
+    <Grid x:Name="MarginGrid" Background="{Binding BackgroundBrush, FallbackValue=Black}">
         <Viewbox StretchDirection="Both" Stretch="Uniform">
             <StackPanel Orientation="Horizontal" Margin="200">
                 <local:SevenSegment DataContext="{Binding ElementName=_this, Path=Segment1}" />
