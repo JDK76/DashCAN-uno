@@ -1,12 +1,19 @@
-﻿namespace DashCAN.ViewModel
+﻿using System.Device.Gpio;
+
+namespace DashCAN.ViewModel
 {
-    public class Main : ViewModelBase
+    public class Main : ViewModelBase, IDisposable
     {
         private double Value = 0;
         private double increment = 0.5;
+        private readonly GpioController GpioController;
+        private const int TestPin = 18;
 
         public Main()
         {
+            GpioController = new GpioController();
+            GpioController.OpenPin(TestPin, PinMode.Output);
+
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 0, 0, 30);
@@ -31,8 +38,24 @@
             Engine.Value = ((Value + 5) % 10 > 5);
             Brake.Value = ((Value + 6) % 10 > 5);
 
+            SetTestPin(Value % 6 > 3);
+
             Value += increment;
             if (Value >= 100 || Value <= 0) increment *= -1;
+        }
+
+        private bool LastPin8State { get; set; }
+        private void SetTestPin(bool state)
+        {
+            if (state == LastPin8State) return;
+            LastPin8State = state;
+
+            GpioController.Write(TestPin, state ? PinValue.High : PinValue.Low);
+        }
+
+        public void Dispose()
+        {
+            GpioController?.Dispose();
         }
 
         public static Brush BackgroundBrush
