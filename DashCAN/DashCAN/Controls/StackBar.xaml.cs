@@ -25,11 +25,13 @@ namespace DashCAN.Controls
         private void StackBar_Loaded(object sender, RoutedEventArgs e)
         {
             // Create glow effect for static components
+            StaticGlow.Clear();
             AddGlow(topLabel, ViewModel.StackBar.LitBrush);
             AddGlow(arrow, ViewModel.StackBar.LitBrush);
             AddGlow(bottomLabel, ViewModel.StackBar.LitBrush);
 
             // Create glow effect for segments
+            Segments.Clear();
             for (var i = 1; i <= 10; i++)
             {
                 var segment = grd.FindName($"seg{i}") as Rectangle;

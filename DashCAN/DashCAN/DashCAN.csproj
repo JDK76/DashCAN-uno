@@ -12,7 +12,6 @@
 		<PackageReference Include="SkiaSharp" />
 		<PackageReference Include="SkiaSharp.Views" />
 		<PackageReference Include="SkiaSharp.Views.Uno.WinUI" />
-		<PackageReference Include="System.Device.Gpio" />
 		<PackageReference Include="Uno.WinUI" />
 		<PackageReference Include="Uno.Resizetizer" />
 		<PackageReference Include="CommunityToolkit.Mvvm" />

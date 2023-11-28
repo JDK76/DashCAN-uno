@@ -5,7 +5,6 @@ namespace DashCAN.Controls
     public sealed partial class SevenSegment : UserControl
     {
         private ViewModel.SevenSegment? VM { get; set; }
-        private readonly Dictionary<int, Tuple<Microsoft.UI.Xaml.Shapes.Path, Grid>> Segments = new();
 
         public SevenSegment()
         {
@@ -23,8 +22,7 @@ namespace DashCAN.Controls
             // Create glow effect for segments
             for (var i = 1; i <= 7; i++)
             {
-                var segmentGlow = grd.FindName($"seg{i}glow") as Grid;
-                if (segmentGlow != null)
+                if (grd.FindName($"seg{i}glow") is Grid segmentGlow)
                 {
                     Helpers.Glow.AddGlow(segmentGlow, Helpers.Brushes.SegmentLit.Color, 1, 100, false);
                 }

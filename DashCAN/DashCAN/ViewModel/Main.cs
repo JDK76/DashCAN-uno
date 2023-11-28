@@ -1,19 +1,12 @@
-﻿using System.Device.Gpio;
-
-namespace DashCAN.ViewModel
+﻿namespace DashCAN.ViewModel
 {
-    public class Main : ViewModelBase, IDisposable
+    public class Main : ViewModelBase
     {
         private double Value = 0;
         private double increment = 0.5;
-        private readonly GpioController GpioController;
-        private const int TestPin = 18;
 
         public Main()
         {
-            GpioController = new GpioController();
-            GpioController.OpenPin(TestPin, PinMode.Output);
-
             var timer = new DispatcherTimer();
             timer.Tick += Timer_Tick;
             timer.Interval = new TimeSpan(0, 0, 0, 0, 30);
@@ -22,7 +15,9 @@ namespace DashCAN.ViewModel
 
         private void Timer_Tick(object? sender, object e)
         {
-            Tachometer.Value = (int)Value * 100;
+            AnalogTacho.Value = Value * 80;
+            Tachometer.Value = (int)Value * 80;
+            AnalogSpeed.Value = Value * 2.2;
             VehicleSpeed.Value = (int)(Value * 2.0);
             FuelLevel.Value = Value;
             CoolantTemperature.Value = Value * 2;
@@ -38,24 +33,8 @@ namespace DashCAN.ViewModel
             Engine.Value = ((Value + 5) % 10 > 5);
             Brake.Value = ((Value + 6) % 10 > 5);
 
-            SetTestPin(Value % 6 > 3);
-
             Value += increment;
             if (Value >= 100 || Value <= 0) increment *= -1;
-        }
-
-        private bool LastPin8State { get; set; }
-        private void SetTestPin(bool state)
-        {
-            if (state == LastPin8State) return;
-            LastPin8State = state;
-
-            GpioController.Write(TestPin, state ? PinValue.High : PinValue.Low);
-        }
-
-        public void Dispose()
-        {
-            GpioController?.Dispose();
         }
 
         public static Brush BackgroundBrush
@@ -68,7 +47,11 @@ namespace DashCAN.ViewModel
             get { return Helpers.Brushes.SegmentLit; }
         }
 
-        public DigiTacho Tachometer { get; set; } = new();
+        public Dial AnalogTacho { get; set; } = new Dial();
+
+        public DigiTacho Tachometer { get; set; } = new DigiTacho();
+
+        public Dial AnalogSpeed { get; set; } = new Dial();
 
         public SevenSegmentGroup VehicleSpeed { get; set; } = new(3);
 
