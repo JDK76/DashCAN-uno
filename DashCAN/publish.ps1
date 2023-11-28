@@ -1,0 +1,2 @@
+dotnet build ./DashCAN.Skia.Gtk/DashCAN.Skia.Gtk.csproj --runtime linux-arm64 --configuration Release --self-contained --output ./publish
+scp -r ./publish/* norbie@raspberrypi4.local:/home/norbie/dashcan-publish
