@@ -23,6 +23,7 @@ namespace DashCAN.Controls
         public int MediumDivision { get; set; }
         public int SmallDivision { get; set; }
         public bool ReverseLayout { get; set; }
+        public int LabelMultiplier { get; set; } = 1;
 
         private int ZeroAngle { get { return ReverseLayout ? -200 : 180; } }
         private Point DialCentrePoint { get; set; }
@@ -40,7 +41,7 @@ namespace DashCAN.Controls
 
         private void VM_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (VM != null) DialPointerTransform.Angle = DegreesFromValue(VM.Value);
+            if (VM != null) DialPointerTransform.Angle = (double)DegreesFromValue(VM.Value) - (ReverseLayout ? 20 : 0);
         }
 
         private void HalfRoundDial_Loaded(object sender, RoutedEventArgs e)
@@ -89,24 +90,34 @@ namespace DashCAN.Controls
                 // Labels
                 if (i % BigDivision == 0)
                 {
-                    var point = GetRadiusPoint(DialCentrePoint, outerRad * 0.9, degrees);
-                    canvas.Children.Add(new TextBlock()
+                    var txt = new TextBlock()
                     {
-                        Margin = new Thickness(point.X, point.Y, 0, 0),
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment = VerticalAlignment.Center,
                         TextAlignment = TextAlignment.Center,
-                        Foreground = new SolidColorBrush(Color.FromArgb(64, 255, 255, 255)),
-                        FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_condensed_bt.ttf#Square721 Cn BT"),
-                        FontSize = 100,
-                        FontWeight = FontWeights.Bold,
-                        Text = i.ToString()
-                    });
+                        Foreground = new SolidColorBrush(Colors.White),
+                        //FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_condensed_bt.ttf#Square721 Cn BT"),
+                        FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_bold.otf#Square 721"),
+                        FontSize = 80,
+                        //FontWeight = FontWeights.ExtraBold,
+                        Text = (i / LabelMultiplier).ToString()
+                    };
+                    txt.Measure(new Size(0, 0));
+                    var point = GetRadiusPoint(DialCentrePoint, outerRad * 0.9 - txt.ActualWidth * 0.6, degrees);
+                    //canvas.Children.Add(new Ellipse()
+                    //{
+                    //    Fill = new SolidColorBrush(Colors.Red),
+                    //    Width = 4,
+                    //    Height = 4,
+                    //    Margin = new Thickness(point.X - 2, point.Y - 2, 0, 0)
+                    //});
+                    txt.Margin = new Thickness(point.X - txt.ActualWidth / 2, point.Y - txt.ActualHeight / 2, 0, 0);
+                    canvas.Children.Add(txt);
                 }
             }
 
             // Pointer
-            var zeroPoint = GetRadiusPoint(DialCentrePoint, outerRad + 0.95, 0);
+            var zeroPoint = new Point(DialCentrePoint.X - ((double)outerRad * 0.95), DialCentrePoint.Y);
             canvas.Children.Add(new Polygon()
             {
                 Fill = new SolidColorBrush(Colors.Orange),
@@ -115,9 +126,9 @@ namespace DashCAN.Controls
             });
         }
 
-        private double DegreesFromValue(double value)
+        private double DegreesFromValue(decimal value)
         {
-            return (value / MaxValue) * 200d;
+            return (double)(value / MaxValue * 200);
         }
 
         private Point GetRadiusPoint(Point centre, double radius, double degrees)

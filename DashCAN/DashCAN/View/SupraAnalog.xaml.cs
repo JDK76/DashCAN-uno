@@ -5,7 +5,6 @@
         public SupraAnalog()
         {
             this.InitializeComponent();
-            this.DataContext = new ViewModel.Main();
         }
     }
 }

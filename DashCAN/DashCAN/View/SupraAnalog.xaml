@@ -28,7 +28,7 @@
             </Grid.ColumnDefinitions>
 
             <controls:HalfRoundDial Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="3" DataContext="{Binding AnalogSpeed}" MinValue="0" MaxValue="220" BigDivision="20" MediumDivision="10" SmallDivision="5" />
-            <controls:HalfRoundDial Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" Grid.ColumnSpan="3" DataContext="{Binding AnalogTacho}" MinValue="0" MaxValue="8000" BigDivision="1000" MediumDivision="500" SmallDivision="100" ReverseLayout="True" />
+            <controls:HalfRoundDial Grid.Row="0" Grid.RowSpan="2" Grid.Column="3" Grid.ColumnSpan="3" DataContext="{Binding AnalogTacho}" MinValue="0" MaxValue="8000" BigDivision="1000" MediumDivision="500" SmallDivision="100" ReverseLayout="True" LabelMultiplier="1000" />
         </Grid>
     </Viewbox>
 </Page>
