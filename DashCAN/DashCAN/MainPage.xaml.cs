@@ -10,7 +10,8 @@ namespace DashCAN
 
         private void MainPage_Loaded(object sender, RoutedEventArgs e)
         {
-            cc.Content = new View.SupraAnalog() { DataContext = new ViewModel.Main() };
+            //cc.Content = new View.SupraAnalog() { DataContext = new ViewModel.Main(ViewModel.DataSource.Demo) };
+            cc.Content = new View.SupraDigital() { DataContext = new ViewModel.Main(ViewModel.DataSource.Demo) };
         }
 
         private void Grid_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)

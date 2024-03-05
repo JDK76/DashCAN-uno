@@ -1,4 +1,6 @@
-﻿namespace DashCAN.ViewModel
+﻿using DashCAN.CanBus;
+
+namespace DashCAN.ViewModel
 {
     public class Warning : ViewModelBase
     {
@@ -19,6 +21,11 @@
         {
             get { return _value; }
             set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { nameof(MainColour) }); }
+        }
+
+        public void SetValue(BoolValue value)
+        {
+            Value = value.IsSet;
         }
 
         public SolidColorBrush MainColour

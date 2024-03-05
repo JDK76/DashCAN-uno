@@ -1,18 +1,19 @@
-﻿using Windows.ApplicationModel.Core;
+﻿using DashCAN.CanBus;
+using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
 namespace DashCAN.ViewModel
 {
-    public class StackBar : ViewModelBase
+    public class StackBar : InstrumentValue
     {
         private readonly bool Stacked;
         private readonly bool FlashOnMax;
-        private readonly double MinValue;
-        private readonly double MaxValue;
+        private readonly decimal MinValue;
+        private readonly decimal MaxValue;
         private readonly System.Timers.Timer Flasher;
         private bool FlasherOn;
 
-        public StackBar(bool stacked, bool flashOnMax, string minLabel, string maxLabel, double minValue, double maxValue, double? value = null)
+        public StackBar(Unit displayUnit, bool stacked, bool flashOnMax, string minLabel, string maxLabel, decimal minValue, decimal maxValue, decimal? value = null) : base(displayUnit)
         {
             Flasher = new System.Timers.Timer(200);
             Flasher.Elapsed += Flasher_Elapsed;
@@ -66,8 +67,8 @@ namespace DashCAN.ViewModel
 
         public string MaxLabel { get; set; }
 
-        private double _value;
-        public double Value
+        private decimal _value;
+        public decimal Value
         {
             get { return _value; }
             set
@@ -102,6 +103,11 @@ namespace DashCAN.ViewModel
                     OnPropertyChanged(Enumerable.Range(1, 10).Select(i => $"Seg{i}Fill"));
                 }
             }
+        }
+
+        public override void SetValue(DataValue value)
+        {
+            Value = value.ConvertUnit(DisplayUnit);
         }
 
         public Brush Seg1Fill
@@ -184,9 +190,9 @@ namespace DashCAN.ViewModel
             }
         }
 
-        private double FullRange { get { return MaxValue - MinValue; } }
+        private decimal FullRange { get { return MaxValue - MinValue; } }
 
-        private double SegmentRange { get { return FullRange / 10.0; } }
+        private decimal SegmentRange { get { return FullRange / 10.0m; } }
 
         /// <summary>
         /// Determines wherther the specified segment should be lit up.

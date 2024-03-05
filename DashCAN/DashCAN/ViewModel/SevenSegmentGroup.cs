@@ -1,10 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using DashCAN.CanBus;
+using System.Collections.ObjectModel;
 
 namespace DashCAN.ViewModel
 {
-    public class SevenSegmentGroup : ViewModelBase
+    public class SevenSegmentGroup : InstrumentValue
     {
-        public SevenSegmentGroup(int segmentCount)
+        public SevenSegmentGroup(Unit displayUnit, int segmentCount) : base(displayUnit)
         {
             SegmentCount = segmentCount;
             if (SegmentCount < 1) SegmentCount = 1;
@@ -25,6 +26,11 @@ namespace DashCAN.ViewModel
         {
             get { return _value; }
             set { if (SetProperty(ref _value, value)) SetValue(value); }
+        }
+
+        public override void SetValue(DataValue value)
+        {
+            Value = (int)value.ConvertUnit(DisplayUnit);
         }
 
         private void SetValue(int value)

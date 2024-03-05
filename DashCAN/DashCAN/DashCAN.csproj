@@ -57,4 +57,8 @@
 		<Content Include="Assets\Fonts\*.ttf" />
 		<UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\CanBus\DashCAN.CanBus.csproj" />
+	</ItemGroup>
 </Project>
