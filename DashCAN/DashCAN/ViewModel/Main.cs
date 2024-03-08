@@ -1,4 +1,5 @@
 ﻿using DashCAN.CanBus;
+using System.Collections.ObjectModel;
 
 namespace DashCAN.ViewModel
 {
@@ -9,14 +10,17 @@ namespace DashCAN.ViewModel
         private readonly DispatcherTimer Timer;
         private readonly CanReader? CanReader;
         private readonly DataSource DataSource;
+        private readonly MessageLogger Logger;
 
         public Main(DataSource source)
         {
             DataSource = source;
+            Logger = new MessageLogger();
+            Logger.MessageReceived += Logger_MessageReceived;
 
             if (source == DataSource.CanBus)
             {
-                CanReader = new();
+                CanReader = new(Logger);
                 CanReader.Start();
             }
 
@@ -24,6 +28,13 @@ namespace DashCAN.ViewModel
             Timer.Tick += Timer_Tick;
             Timer.Interval = new TimeSpan(0, 0, 0, 0, 30);
             Timer.Start();
+
+            Logger.LogInformation("Startup for {source}", source);
+        }
+
+        private void Logger_MessageReceived(object? sender, MessageEventArgs e)
+        {
+            Messages.Add(e.Message);
         }
 
         private void Timer_Tick(object? sender, object e)
@@ -32,9 +43,13 @@ namespace DashCAN.ViewModel
             {
                 UpdateDemo();
                 DemoValue += DemoIncrement;
-                if (DemoValue >= 100 || DemoValue <= 0) DemoIncrement *= -1;
+                if (DemoValue >= 100 || DemoValue <= 0)
+                {
+                    DemoIncrement *= -1;
+                    Logger.Log(LogLevel.Information, "Reverse!");
+                }
             }
-            else if (DataSource == DataSource.Demo)
+            else if (DataSource == DataSource.CanBus)
             {
                 UpdateCAN();
             }
@@ -132,11 +147,44 @@ namespace DashCAN.ViewModel
         public Warning Engine { get; set; } = new Warning(WarningType.Engine);
 
         public Warning Brake { get; set; } = new Warning(WarningType.Brake);
+
+        public ObservableCollection<Tuple<LogLevel, string>> Messages { get; set; } = new(); // new(new Tuple<LogLevel, string>[1] { Tuple.Create(LogLevel.Information, "Start") });
     }
 
     public enum DataSource
     {
         Demo,
         CanBus
+    }
+
+    public class MessageLogger : ILogger
+    {
+        public List<Tuple<LogLevel, string>> Messages { get; private set; } = new();
+        public event EventHandler<MessageEventArgs>? MessageReceived;
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            return true;
+        }
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+        {
+            var message = Tuple.Create(logLevel, $"{formatter(state, exception)}");
+            Messages.Add(message);
+            MessageReceived?.Invoke(this, new MessageEventArgs(message));
+            System.Diagnostics.Debug.WriteLine(message.Item2);
+        }
+    }
+
+    public class MessageEventArgs : EventArgs
+    {
+        public MessageEventArgs(Tuple<LogLevel, string> message)
+        {
+            Message = message;
+        }
+
+        public Tuple<LogLevel, string> Message { get; private set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Iot.Device.SocketCan;
+using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 
 namespace DashCAN.CanBus
 {
@@ -12,14 +12,19 @@ namespace DashCAN.CanBus
         private readonly CancellationTokenSource TokenSource = new();
         private CancellationToken CancellationToken;
         public readonly CanDataModel DataModel = new();
+        public readonly ILogger Logger;
+        public long ReadSuccessCount { get; private set; }
+        public long ReadErrorCount { get; private set; }
 
-        public CanReader()
+        public CanReader(ILogger logger)
         {
+            Logger = logger;
             CanDevice = new();
         }
 
         public void Start()
         {
+            Logger.LogInformation("Start read from CAN device to memory buffer");
             CancellationToken = TokenSource.Token;
             Task.Run(() => ReadToBufferLoop(CanDevice, CancellationToken), CancellationToken);
             Task.Run(() => ParseMessages(CancellationToken), CancellationToken);
@@ -27,29 +32,37 @@ namespace DashCAN.CanBus
 
         public void Stop()
         {
-            Debug.WriteLine("Stop read from CAN device to memory buffer");
+            Logger.LogInformation("Stop read from CAN device to memory buffer");
             TokenSource.Cancel();
         }
 
         private void ReadToBufferLoop(CanRaw can, CancellationToken ct)
         {
-            Debug.WriteLine("Start read from CAN device to memory buffer");
             while (!ct.IsCancellationRequested)
             {
                 try
                 {
                     if (can.TryReadFrame(buffer, out int frameLength, out CanId id))
                     {
-                        ReadBuffer.Enqueue(new CanInfo(id, frameLength, buffer));
+                        if (id.Error)
+                        {
+                            Logger.LogWarning("Error flag set!");
+                            ReadErrorCount++;
+                        }
+                        else
+                        {
+                            ReadBuffer.Enqueue(new CanInfo(id, frameLength, buffer));
+                            ReadSuccessCount++;
+                        }
                     }
                     else
                     {
-                        Debug.WriteLine($"Invalid frame received!");
+                        Logger.LogWarning("Invalid frame received!");
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Unexpected error in ReadToBufferLoop: " + ex.Message);
+                    Logger.LogError(ex, "Unexpected error in ReadToBufferLoop: {Message}", ex.Message);
                 }
             }
         }
@@ -62,9 +75,7 @@ namespace DashCAN.CanBus
                 {
                     if (ReadBuffer.TryDequeue(out var canInfo))
                     {
-                        var messageId = canInfo.CanId.Value;
-                        Debug.WriteLine($"Parsing message ID {messageId}");
-                        switch (messageId)
+                        switch (canInfo.CanId.Value)
                         {
                             case 0x360:
                                 DataModel.Parse360(canInfo.Bytes);
@@ -97,14 +108,14 @@ namespace DashCAN.CanBus
                                 DataModel.Parse471(canInfo.Bytes);
                                 break;
                             default:
-                                Debug.WriteLine($"Skipped message ID {messageId}");
+                                Logger.LogInformation("Skipped unknown CAN ID {Value}", canInfo.CanId.Value);
                                 break;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Unexpected error in ParseMessages: " + ex.Message);
+                    Logger.LogError(ex, "Unexpected error in ParseMessages: {Message}", ex.Message);
                 }
             }
         }

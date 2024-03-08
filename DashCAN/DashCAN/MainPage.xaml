@@ -5,7 +5,21 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	mc:Ignorable="d">
 
-    <Grid Tapped="Grid_Tapped">
-        <ContentControl x:Name="cc" />
+    <Grid Tapped="Grid_Tapped" Background="Bisque">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
+            <ContentControl x:Name="cc" />
+            <!--<ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled" HorizontalScrollMode="Disabled" Background="AliceBlue" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Height="200px">
+                <ListView x:Name="lv" Background="White">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Item1}" FontWeight="SemiBold" Foreground="DarkBlue" Margin="0" />
+                                <TextBlock Text="{Binding Item2}" Foreground="Black" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </ScrollViewer>-->
+        </StackPanel>
     </Grid>
 </Page>
