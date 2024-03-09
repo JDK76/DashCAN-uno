@@ -29,6 +29,18 @@ namespace DashCAN.ViewModel
             Timer.Interval = new TimeSpan(0, 0, 0, 0, 30);
             Timer.Start();
 
+            Console.Clear();
+            var timer2 = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 500) };
+            timer2.Tick += (object? sender, object e) =>
+            {
+                lock (Logger._MessageLock)
+                {
+                    Console.SetCursorPosition(0, 1);
+                    Console.Write($"Temp: {CanReader.DataModel.CoolantTemp.Value:000.0} | Accel: {CanReader.DataModel.AcceleratorPedal.Value:000.0} | Fuel: {CanReader.DataModel.FuelLevel.Value:000.0} | RPM: {(int)CanReader.DataModel.RPM.Value:00000}");
+                }
+            };
+            timer2.Start();
+
             Logger.LogInformation("Startup for {source}", source);
         }
 
@@ -148,7 +160,7 @@ namespace DashCAN.ViewModel
 
         public Warning Brake { get; set; } = new Warning(WarningType.Brake);
 
-        public ObservableCollection<Tuple<LogLevel, string>> Messages { get; set; } = new(); // new(new Tuple<LogLevel, string>[1] { Tuple.Create(LogLevel.Information, "Start") });
+        public ObservableCollection<Tuple<LogLevel, string>> Messages { get; set; } = new();
     }
 
     public enum DataSource
@@ -161,6 +173,7 @@ namespace DashCAN.ViewModel
     {
         public List<Tuple<LogLevel, string>> Messages { get; private set; } = new();
         public event EventHandler<MessageEventArgs>? MessageReceived;
+        public object _MessageLock = new();
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
@@ -175,6 +188,37 @@ namespace DashCAN.ViewModel
             Messages.Add(message);
             MessageReceived?.Invoke(this, new MessageEventArgs(message));
             System.Diagnostics.Debug.WriteLine(message.Item2);
+
+            lock (_MessageLock)
+            {
+                if (logLevel == LogLevel.Error)
+                {
+                    Console.SetCursorPosition(0, 7);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+                else if (logLevel == LogLevel.Warning)
+                {
+                    Console.SetCursorPosition(0, 6);
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                }
+                else if (logLevel == LogLevel.Information)
+                {
+                    Console.SetCursorPosition(0, 5);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                }
+                else if (logLevel == LogLevel.Debug)
+                {
+                    Console.SetCursorPosition(0, 4);
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                }
+                else
+                {
+                    Console.SetCursorPosition(0, 3);
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                Console.Write(message.Item2);
+                Console.ResetColor();
+            }
         }
     }
 

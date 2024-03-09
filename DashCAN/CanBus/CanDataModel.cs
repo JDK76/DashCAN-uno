@@ -1,7 +1,16 @@
-﻿namespace DashCAN.CanBus
+﻿using Microsoft.Extensions.Logging;
+
+namespace DashCAN.CanBus
 {
     public class CanDataModel
     {
+        public CanDataModel(ILogger logger)
+        {
+            Logger = logger;
+        }
+
+        private ILogger Logger { get; set; }
+
         // 0x360
         public RpmValue RPM { get; set; } = new();
         public PressureValue ManifoldPressure { get; set; } = new(true);
@@ -59,81 +68,103 @@
         // 0x471
         public PercentValue AcceleratorPedal { get; set; } = new();
 
-        public void Parse360(byte[] data)
+        public void Parse(CanInfo canInfo)
         {
-            RPM.SetValue(data, 0, 2);
-            ManifoldPressure.SetValue(data, 2, 2);
-            ThrottlePosition.SetValue(data, 4, 2);
-            CoolantPressure.SetValue(data, 6, 2);
+            var canId = canInfo.CanId.Value;
+            var data = canInfo.Bytes;
+
+            if (canInfo.Bytes == null ||  data.Length == 0)
+            {
+                Logger.LogWarning("Data was empty for CAN ID {canId}", canId);
+                return;
+            }
+            else if (canInfo.Bytes.Length != 8)
+            {
+                Logger.LogWarning("Unexpected data length {Length} for CAN ID {canId}", data.Length, canId);
+                return;
+            }
+
+            var methodName = $"Parse{canId:X3}";
+            var method = typeof(CanDataModel).GetMethod(methodName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, new Type[] { typeof(CanInfo) });
+            if (method == null) Logger.LogError("No method '{methodName}' in {type}", methodName, nameof(CanDataModel));
+            method?.Invoke(this, new object[] { canInfo });
         }
 
-        public void Parse361(byte[] data)
+        private void Parse360(CanInfo canInfo)
         {
-            FuelPressure.SetValue(data, 2, 2);
-            OilPressure.SetValue(data, 2, 2);
-            EngineDemand.SetValue(data, 4, 2);
-            WastegatePressure.SetValue(data, 6, 2);
+            RPM.SetValue(canInfo.Bytes, 0, 2);
+            ManifoldPressure.SetValue(canInfo.Bytes, 2, 2);
+            ThrottlePosition.SetValue(canInfo.Bytes, 4, 2);
+            CoolantPressure.SetValue(canInfo.Bytes, 6, 2);
         }
 
-        public void Parse370(byte[] data)
+        private void Parse361(CanInfo canInfo)
         {
-            VehicleSpeed.SetValue(data, 0, 2);
-            TargetBoost.SetValue(data, 4, 2);
-            BarometricPressure.SetValue(data, 6, 2);
+            FuelPressure.SetValue(canInfo.Bytes, 2, 2);
+            OilPressure.SetValue(canInfo.Bytes, 2, 2);
+            EngineDemand.SetValue(canInfo.Bytes, 4, 2);
+            WastegatePressure.SetValue(canInfo.Bytes, 6, 2);
         }
 
-        public void Parse372(byte[] data)
+        private void Parse370(CanInfo canInfo)
         {
-            BatteryVoltage.SetValue(data, 0, 2);
+            VehicleSpeed.SetValue(canInfo.Bytes, 0, 2);
+            TargetBoost.SetValue(canInfo.Bytes, 4, 2);
+            BarometricPressure.SetValue(canInfo.Bytes, 6, 2);
         }
 
-        public void Parse3E0(byte[] data)
+        private void Parse372(CanInfo canInfo)
         {
-            CoolantPressure.SetValue(data, 0, 2);
-            AirTemp.SetValue(data, 2, 2);
-            FuelTemp.SetValue(data, 4, 2);
-            OilTemp.SetValue(data, 6, 2);
+            BatteryVoltage.SetValue(canInfo.Bytes, 0, 2);
         }
 
-        public void Parse3E1(byte[] data)
+        private void Parse3E0(CanInfo canInfo)
         {
-            FuelComposition.SetValue(data, 4, 2);
+            CoolantTemp.SetValue(canInfo.Bytes, 0, 2);
+            AirTemp.SetValue(canInfo.Bytes, 2, 2);
+            FuelTemp.SetValue(canInfo.Bytes, 4, 2);
+            OilTemp.SetValue(canInfo.Bytes, 6, 2);
         }
 
-        public void Parse3E2(byte[] data)
+        private void Parse3E1(CanInfo canInfo)
         {
-            FuelLevel.SetValue(data, 4, 2);
+            FuelComposition.SetValue(canInfo.Bytes, 4, 2);
         }
 
-        public void Parse3E4(byte[] data)
+        private void Parse3E2(CanInfo canInfo)
         {
-            NeutralSwitch.SetValue(data[1], 7);
-            ReverseSwitch.SetValue(data[1], 6);
-            GearSwitch.SetValue(data[1], 5);
-            DecelCut.SetValue(data[1], 4);
-            TransThrottle.SetValue(data[1], 3);
-            BrakePedal.SetValue(data[1], 2);
-            ClutchPedal.SetValue(data[1], 1);
-            OilPressureLight.SetValue(data[1], 0);
-            ThermoFan4.SetValue(data[3], 3);
-            ThermoFan3.SetValue(data[3], 2);
-            ThermoFan2.SetValue(data[3], 1);
-            ThermoFan1.SetValue(data[3], 0);
-            CheckEngine.SetValue(data[7], 7);
-            BatteryLight.SetValue(data[7], 6);
+            FuelLevel.SetValue(canInfo.Bytes, 0, 2);
         }
 
-        public void Parse470(byte[] data)
+        private void Parse3E4(CanInfo canInfo)
         {
-            WidebandOverall.SetValue(data, 0, 2);
-            WidebandBank1.SetValue(data, 2, 2);
-            WidebandBank2.SetValue(data, 4, 2);
-            SelectedGear.SetValue(data, 7, 1);
+            NeutralSwitch.SetValue(canInfo.Bytes[1], 7);
+            ReverseSwitch.SetValue(canInfo.Bytes[1], 6);
+            GearSwitch.SetValue(canInfo.Bytes[1], 5);
+            DecelCut.SetValue(canInfo.Bytes[1], 4);
+            TransThrottle.SetValue(canInfo.Bytes[1], 3);
+            BrakePedal.SetValue(canInfo.Bytes[1], 2);
+            ClutchPedal.SetValue(canInfo.Bytes[1], 1);
+            OilPressureLight.SetValue(canInfo.Bytes[1], 0);
+            ThermoFan4.SetValue(canInfo.Bytes[3], 3);
+            ThermoFan3.SetValue(canInfo.Bytes[3], 2);
+            ThermoFan2.SetValue(canInfo.Bytes[3], 1);
+            ThermoFan1.SetValue(canInfo.Bytes[3], 0);
+            CheckEngine.SetValue(canInfo.Bytes[7], 7);
+            BatteryLight.SetValue(canInfo.Bytes[7], 6);
         }
 
-        public void Parse471(byte[] data)
+        private void Parse470(CanInfo canInfo)
         {
-            AcceleratorPedal.SetValue(data, 2, 2);
+            WidebandOverall.SetValue(canInfo.Bytes, 0, 2);
+            WidebandBank1.SetValue(canInfo.Bytes, 2, 2);
+            WidebandBank2.SetValue(canInfo.Bytes, 4, 2);
+            SelectedGear.SetValue(canInfo.Bytes, 7, 1);
+        }
+
+        private void Parse471(CanInfo canInfo)
+        {
+            AcceleratorPedal.SetValue(canInfo.Bytes, 2, 2);
         }
     }
 }

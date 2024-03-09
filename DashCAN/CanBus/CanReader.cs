@@ -6,20 +6,27 @@ namespace DashCAN.CanBus
 {
     public class CanReader : IDisposable
     {
-        private readonly CanRaw CanDevice;
-        private readonly ConcurrentQueue<CanInfo> ReadBuffer = new();
-        private readonly byte[] buffer = new byte[8];
+        private readonly ILogger Logger;
+        private readonly CanRaw CanDevice = new();
+        private readonly ConcurrentDictionary<uint, ConcurrentStack<CanInfo>> ReadBuffers = new();
         private readonly CancellationTokenSource TokenSource = new();
         private CancellationToken CancellationToken;
-        public readonly CanDataModel DataModel = new();
-        public readonly ILogger Logger;
+
+        public CanDataModel DataModel { get; private set; }
         public long ReadSuccessCount { get; private set; }
         public long ReadErrorCount { get; private set; }
+
+        private readonly uint[] CanIdList = new uint[10] { 0x360, 0x361, 0x370, 0x372, 0x3E0, 0x3E1, 0x3E2, 0x3E4, 0x470, 0x471 };
 
         public CanReader(ILogger logger)
         {
             Logger = logger;
-            CanDevice = new();
+            DataModel = new(logger);
+
+            foreach (var id in CanIdList)
+            {
+                ReadBuffers.TryAdd(id, new ConcurrentStack<CanInfo>());
+            }
         }
 
         public void Start()
@@ -42,6 +49,7 @@ namespace DashCAN.CanBus
             {
                 try
                 {
+                    var buffer = new byte[8];
                     if (can.TryReadFrame(buffer, out int frameLength, out CanId id))
                     {
                         if (id.Error)
@@ -49,15 +57,16 @@ namespace DashCAN.CanBus
                             Logger.LogWarning("Error flag set!");
                             ReadErrorCount++;
                         }
-                        else
+                        else if (ReadBuffers.TryGetValue(id.Value, out ConcurrentStack<CanInfo>? value))
                         {
-                            ReadBuffer.Enqueue(new CanInfo(id, frameLength, buffer));
+                            value.Push(new CanInfo(id, frameLength, buffer));
                             ReadSuccessCount++;
                         }
                     }
                     else
                     {
                         Logger.LogWarning("Invalid frame received!");
+                        Thread.Sleep(20);
                     }
                 }
                 catch (Exception ex)
@@ -73,45 +82,16 @@ namespace DashCAN.CanBus
             {
                 try
                 {
-                    if (ReadBuffer.TryDequeue(out var canInfo))
+                    foreach (var canId in CanIdList)
                     {
-                        switch (canInfo.CanId.Value)
+                        if (ReadBuffers[canId].TryPeek(out var canInfo))
                         {
-                            case 0x360:
-                                DataModel.Parse360(canInfo.Bytes);
-                                break;
-                            case 0x361:
-                                DataModel.Parse361(canInfo.Bytes);
-                                break;
-                            case 0x370:
-                                DataModel.Parse370(canInfo.Bytes);
-                                break;
-                            case 0x372:
-                                DataModel.Parse372(canInfo.Bytes);
-                                break;
-                            case 0x3E0:
-                                DataModel.Parse3E0(canInfo.Bytes);
-                                break;
-                            case 0x3E1:
-                                DataModel.Parse3E1(canInfo.Bytes);
-                                break;
-                            case 0x3E2:
-                                DataModel.Parse3E2(canInfo.Bytes);
-                                break;
-                            case 0x3E4:
-                                DataModel.Parse3E4(canInfo.Bytes);
-                                break;
-                            case 0x470:
-                                DataModel.Parse470(canInfo.Bytes);
-                                break;
-                            case 0x471:
-                                DataModel.Parse471(canInfo.Bytes);
-                                break;
-                            default:
-                                Logger.LogInformation("Skipped unknown CAN ID {Value}", canInfo.CanId.Value);
-                                break;
+                            // Get latest from buffer and discard the rest
+                            DataModel.Parse(canInfo);
+                            ReadBuffers[canId].Clear();
                         }
                     }
+                    Thread.Sleep(100);
                 }
                 catch (Exception ex)
                 {
