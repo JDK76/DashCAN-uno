@@ -15,6 +15,8 @@ namespace DashCAN.ViewModel
             {
                 Segments.Add(new SevenSegment());
             }
+
+            SetValue(0);
         }
 
         private readonly int SegmentCount;
