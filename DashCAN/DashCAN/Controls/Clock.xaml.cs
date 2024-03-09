@@ -16,7 +16,7 @@
         public ViewModel.SevenSegment Segment3 { get; set; } = new();
         public ViewModel.SevenSegment Segment4 { get; set; } = new();
 
-        public Brush SeparatorFill => Helpers.Brushes.SegmentLit;
+        public static Brush SeparatorFill => Helpers.Brushes.SegmentLit;
 
         private void Timer_Tick(object? sender, object e)
         {
@@ -32,7 +32,7 @@
             SetTime(DateTime.Now.Hour.ToString("00") + DateTime.Now.Minute.ToString("00"));
         }
 
-        private string LastTimeString { get; set; }
+        private string? LastTimeString { get; set; }
 
         private void SetTime(string timeStr)
         {
