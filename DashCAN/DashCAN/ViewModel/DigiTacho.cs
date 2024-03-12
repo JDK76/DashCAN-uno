@@ -1,10 +1,10 @@
-﻿using DashCAN.CanBus;
+﻿using DashCAN.Common;
 
 namespace DashCAN.ViewModel
 {
     public class DigiTacho : InstrumentValue
     {
-        public DigiTacho(Unit displayUnit) : base(displayUnit) { }
+        public DigiTacho(Unit displayUnit, DataValue dataValue) : base(displayUnit, dataValue) { }
 
         private int _value;
         public int Value
@@ -13,7 +13,7 @@ namespace DashCAN.ViewModel
             set { SetProperty(ref _value, value); }
         }
 
-        public override void SetValue(DataValue value)
+        protected override void SetValue(DataValue value)
         {
             Value = (int)value.ConvertUnit(DisplayUnit);
         }

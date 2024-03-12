@@ -1,8 +1,10 @@
-﻿namespace DashCAN.ViewModel
+﻿using DashCAN.Common;
+
+namespace DashCAN.ViewModel
 {
-    public class Indicator : ViewModelBase
+    public class Indicator : InstrumentValue
     {
-        public Indicator(IndicatorType type)
+        public Indicator(IndicatorType type, DataValue dataValue) : base(Unit.Boolean, dataValue)
         {
             Type = type;
         }
@@ -11,14 +13,20 @@
         public IndicatorType Type
         {
             get { return _type; }
-            set { SetProperty(ref _type, value); }
+            private set { SetProperty(ref _type, value); }
         }
 
         private bool _value;
         public bool Value
         {
             get { return _value; }
-            set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { nameof(HighBeamBrush), nameof(LeftBrush), nameof(RightBrush) }); }
+            private set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { nameof(HighBeamBrush), nameof(LeftBrush), nameof(RightBrush) }); }
+        }
+
+        protected override void SetValue(DataValue value)
+        {
+            var boolValue = (value as BoolValue)?.IsSet;
+            if (boolValue.HasValue) Value = boolValue.Value;
         }
 
         public Brush HighBeamBrush { get { return Value ? Helpers.Brushes.HighBeam : Helpers.Brushes.SegmentBackground; } }

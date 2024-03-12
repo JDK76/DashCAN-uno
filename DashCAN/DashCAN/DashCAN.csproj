@@ -60,5 +60,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\CanBus\DashCAN.CanBus.csproj" />
+	  <ProjectReference Include="..\DashCAN.Common\DashCAN.Common.csproj" />
 	</ItemGroup>
 </Project>

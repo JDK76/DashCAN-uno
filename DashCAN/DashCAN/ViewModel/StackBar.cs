@@ -1,4 +1,4 @@
-﻿using DashCAN.CanBus;
+﻿using DashCAN.Common;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 
@@ -13,7 +13,7 @@ namespace DashCAN.ViewModel
         private readonly System.Timers.Timer Flasher;
         private bool FlasherOn;
 
-        public StackBar(Unit displayUnit, bool stacked, bool flashOnMax, string minLabel, string maxLabel, decimal minValue, decimal maxValue, decimal? value = null) : base(displayUnit)
+        public StackBar(Unit displayUnit, DataValue dataValue, bool stacked, bool flashOnMax, string minLabel, string maxLabel, decimal minValue, decimal maxValue, decimal? value = null) : base(displayUnit, dataValue)
         {
             Flasher = new System.Timers.Timer(200);
             Flasher.Elapsed += Flasher_Elapsed;
@@ -105,7 +105,7 @@ namespace DashCAN.ViewModel
             }
         }
 
-        public override void SetValue(DataValue value)
+        protected override void SetValue(DataValue value)
         {
             Value = value.ConvertUnit(DisplayUnit);
         }

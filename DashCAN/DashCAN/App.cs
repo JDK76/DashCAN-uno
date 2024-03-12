@@ -4,7 +4,7 @@ namespace DashCAN
     {
         protected Window? MainWindow { get; private set; }
 
-        protected override void OnLaunched(LaunchActivatedEventArgs args)
+        protected override async void OnLaunched(LaunchActivatedEventArgs args)
         {
 #if NET6_0_OR_GREATER && WINDOWS && !HAS_UNO
 		MainWindow = new Window();
@@ -36,6 +36,17 @@ namespace DashCAN
 
             // Ensure the current window is active
             MainWindow.Activate();
+
+            var dispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread();
+            await Task.Run(() =>
+            {
+                dispatcherQueue.TryEnqueue(() =>
+                {
+                    var vm = new ViewModel.Main(Common.DataSource.Demo);
+                    (rootFrame.Content as MainPage)?.SetDataContext(vm);
+                });
+            });
+
 
 #if HAS_UNO
             Windows.UI.ViewManagement.ApplicationView.GetForCurrentView().TryEnterFullScreenMode();

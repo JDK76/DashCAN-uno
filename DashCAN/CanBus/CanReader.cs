@@ -1,10 +1,11 @@
-﻿using Iot.Device.SocketCan;
+﻿using DashCAN.Common;
+using Iot.Device.SocketCan;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 
 namespace DashCAN.CanBus
 {
-    public class CanReader : IDisposable
+    public class CanReader : IDataSource, IDisposable
     {
         private readonly ILogger Logger;
         private readonly CanRaw CanDevice = new();
@@ -12,7 +13,7 @@ namespace DashCAN.CanBus
         private readonly CancellationTokenSource TokenSource = new();
         private CancellationToken CancellationToken;
 
-        public CanDataModel DataModel { get; private set; }
+        public DataModel DataModel { get; private set; } = new();
         public long ReadSuccessCount { get; private set; }
         public long ReadErrorCount { get; private set; }
 
@@ -21,7 +22,6 @@ namespace DashCAN.CanBus
         public CanReader(ILogger logger)
         {
             Logger = logger;
-            DataModel = new(logger);
 
             foreach (var id in CanIdList)
             {
@@ -59,7 +59,7 @@ namespace DashCAN.CanBus
                         }
                         else if (ReadBuffers.TryGetValue(id.Value, out ConcurrentStack<CanInfo>? value))
                         {
-                            value.Push(new CanInfo(id, frameLength, buffer));
+                            value.Push(new CanInfo(id, frameLength, buffer, Logger));
                             ReadSuccessCount++;
                         }
                     }
@@ -87,7 +87,7 @@ namespace DashCAN.CanBus
                         if (ReadBuffers[canId].TryPeek(out var canInfo))
                         {
                             // Get latest from buffer and discard the rest
-                            DataModel.Parse(canInfo);
+                            canInfo.Parse(DataModel);
                             ReadBuffers[canId].Clear();
                         }
                     }

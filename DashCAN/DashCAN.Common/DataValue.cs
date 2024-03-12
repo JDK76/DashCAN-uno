@@ -1,4 +1,4 @@
-﻿namespace DashCAN.CanBus
+﻿namespace DashCAN.Common
 {
     public abstract class DataValue
     {
@@ -11,10 +11,16 @@
             }
             internal set
             {
-                _value = value;
                 LastUpdate = DateTime.UtcNow;
+                if (_value != value)
+                {
+                    _value = value;
+                    ValueChanged?.Invoke(this, EventArgs.Empty);
+                }
             }
         }
+
+        public event EventHandler? ValueChanged;
 
         public decimal ConvertUnit(Unit targetUnit)
         {
@@ -32,7 +38,12 @@
 
         public abstract Unit Unit { get; }
 
-        internal abstract void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor);
+        public abstract void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor);
+
+        public void SetValue(decimal value)
+        {
+            Value = value;
+        }
 
         protected static uint GetUInt(IEnumerable<byte> bytes, int offset, int length)
         {
@@ -57,15 +68,20 @@
 
         public bool IsSet { get; private set; }
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor)
         {
             throw new NotImplementedException();
         }
 
         public void SetValue(byte data, int offset)
         {
-            IsSet = (data & (1 << offset)) != 0;
-            Value = IsSet ? 1 : 0;
+            SetValue((data & (1 << offset)) != 0);
+        }
+
+        public void SetValue(bool value)
+        {
+            IsSet = value;
+            Value = value ? 1 : 0;
         }
     }
 
@@ -73,7 +89,7 @@
     {
         public override Unit Unit => Unit.RPM;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = null)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = null)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -83,7 +99,7 @@
     {
         public override Unit Unit => Unit.Kmh;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -93,7 +109,7 @@
     {
         public override Unit Unit => Unit.Volts;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -103,7 +119,7 @@
     {
         public override Unit Unit => Unit.Kelvin;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -124,7 +140,7 @@
         public bool IsAbsolute { get; private set; }
         public override Unit Unit => IsAbsolute ? Unit.KpaAbs : Unit.Kpa;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -134,7 +150,7 @@
     {
         public override Unit Unit => Unit.Litre;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -144,7 +160,7 @@
     {
         public override Unit Unit => Unit.Percent;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 10)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -154,7 +170,7 @@
     {
         public override Unit Unit => Unit.Lambda;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 1000)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 1000)
         {
             Value = GetDecimal(bytes, offset, length, divisor);
         }
@@ -166,44 +182,11 @@
 
         public Gear Gear { get; private set; } = Gear.Unknown;
 
-        internal override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 1)
+        public override void SetValue(IEnumerable<byte> bytes, int offset, int length, decimal? divisor = 1)
         {
             var gearVal = bytes.ToArray()[offset];
             Value = ((decimal)gearVal);
             Gear = (Gear)gearVal;
         }
-    }
-
-    public enum Unit
-    {
-        Boolean,
-        Gear,
-        Kmh,
-        Mph,
-        Kelvin,
-        Celcius,
-        Fahrenheit,
-        Kpa,
-        KpaAbs,
-        Psi,
-        Lambda,
-        Litre,
-        UsGallon,
-        Percent,
-        RPM,
-        Volts
-    }
-
-    public enum Gear
-    {
-        Unknown = -2,
-        Reverse = -1,
-        Neutral = 0,
-        First = 1,
-        Second = 2,
-        Third = 3,
-        Fourth = 4,
-        Fifth = 5,
-        Sixth = 6
     }
 }

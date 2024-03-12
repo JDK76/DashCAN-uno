@@ -1,10 +1,10 @@
-﻿using DashCAN.CanBus;
+﻿using DashCAN.Common;
 
 namespace DashCAN.ViewModel
 {
-    public class Warning : ViewModelBase
+    public class Warning : InstrumentValue
     {
-        public Warning(WarningType type)
+        public Warning(WarningType type, DataValue dataValue) : base(Unit.Boolean, dataValue)
         {
             Type = type;
         }
@@ -13,19 +13,20 @@ namespace DashCAN.ViewModel
         public WarningType Type
         {
             get { return _type; }
-            set { SetProperty(ref _type, value); }
+            private set { SetProperty(ref _type, value); }
         }
 
         private bool _value;
         public bool Value
         {
             get { return _value; }
-            set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { nameof(MainColour) }); }
+            private set { if (SetProperty(ref _value, value)) OnPropertyChanged(new string[] { nameof(MainColour) }); }
         }
 
-        public void SetValue(BoolValue value)
+        protected override void SetValue(DataValue value)
         {
-            Value = value.IsSet;
+            var boolValue = (value as BoolValue)?.IsSet;
+            if (boolValue.HasValue) Value = boolValue.Value;
         }
 
         public SolidColorBrush MainColour

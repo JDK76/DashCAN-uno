@@ -1,6 +1,6 @@
 ﻿using UnitsNet;
 
-namespace DashCAN.CanBus
+namespace DashCAN.Common
 {
     internal class UnitHelper
     {

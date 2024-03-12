@@ -1,4 +1,5 @@
-﻿using Microsoft.UI.Xaml.Data;
+﻿using DashCAN.Common;
+using Microsoft.UI.Xaml.Data;
 
 namespace DashCAN.Converters
 {

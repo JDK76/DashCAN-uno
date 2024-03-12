@@ -1,47 +1,75 @@
 ﻿using DashCAN.CanBus;
+using DashCAN.Common;
 using System.Collections.ObjectModel;
 
 namespace DashCAN.ViewModel
 {
     public class Main : ViewModelBase, IDisposable
     {
-        private decimal DemoValue = 0;
-        private decimal DemoIncrement = 0.5m;
-        private readonly DispatcherTimer Timer;
-        private readonly CanReader? CanReader;
-        private readonly DataSource DataSource;
+        private readonly IDataSource DataSource;
+        private readonly DataSource DataSourceType;
         private readonly MessageLogger Logger;
+        private bool HasConsole { get; set; }
 
-        public Main(DataSource source)
+        public Main(DataSource sourceType)
         {
-            DataSource = source;
+#if HAS_UNO
+            HasConsole = true;
+#endif
+            DataSourceType = sourceType;
             Logger = new MessageLogger();
             Logger.MessageReceived += Logger_MessageReceived;
 
-            if (source == DataSource.CanBus)
+            if (DataSourceType == Common.DataSource.CanBus)
             {
-                CanReader = new(Logger);
-                CanReader.Start();
+                DataSource = new CanReader(Logger);
+            }
+            else
+            {
+                DataSource = new DemoLoop();
             }
 
-            Timer = new DispatcherTimer();
-            Timer.Tick += Timer_Tick;
-            Timer.Interval = new TimeSpan(0, 0, 0, 0, 30);
-            Timer.Start();
-
-            Console.Clear();
-            var timer2 = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 500) };
-            timer2.Tick += (object? sender, object e) =>
+            if (HasConsole)
             {
-                lock (Logger._MessageLock)
+                Console.Clear();
+                var consoleTimer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, 500) };
+                consoleTimer.Tick += (object? sender, object e) =>
                 {
-                    Console.SetCursorPosition(0, 1);
-                    Console.Write($"Temp: {CanReader.DataModel.CoolantTemp.Value:000.0} | Accel: {CanReader.DataModel.AcceleratorPedal.Value:000.0} | Fuel: {CanReader.DataModel.FuelLevel.Value:000.0} | RPM: {(int)CanReader.DataModel.RPM.Value:00000}");
-                }
-            };
-            timer2.Start();
+                    lock (Logger._MessageLock)
+                    {
+                        Console.SetCursorPosition(0, 1);
+                        Console.Write($"Temp: {DataSource.DataModel.CoolantTemp.Value:000.0} | Accel: {DataSource.DataModel.AcceleratorPedal.Value:000.0} | Fuel: {DataSource.DataModel.FuelLevel.Value:000.0} | RPM: {(int)DataSource.DataModel.RPM.Value:00000}");
+                    }
+                };
+                consoleTimer.Start();
+            }
 
-            Logger.LogInformation("Startup for {source}", source);
+            Logger.LogInformation("Startup for {source}", DataSourceType);
+            Start();
+        }
+
+        private void Start()
+        {
+            AnalogTacho = new(Unit.RPM, DataSource.DataModel.RPM);
+            Tachometer = new(Unit.RPM, DataSource.DataModel.RPM);
+            AnalogSpeed = new(Unit.Kmh, DataSource.DataModel.VehicleSpeed);
+            VehicleSpeed = new(Unit.Kmh, DataSource.DataModel.VehicleSpeed, 3);
+            FuelLevel = new(Unit.Litre, DataSource.DataModel.FuelLevel, true, false, "E", "F", 0, 65);
+            CoolantTemperature = new(Unit.Celcius, DataSource.DataModel.CoolantTemp, false, true, "C", "H", 0, 150);
+
+            DoorOpen = new Warning(WarningType.DoorOpen, DataSource.DataModel.DoorOpenLight);
+            ParkBrake = new Warning(WarningType.ParkBrake, DataSource.DataModel.ParkBrakeLight);
+            Oil = new Warning(WarningType.Oil, DataSource.DataModel.OilPressureLight);
+            Battery = new Warning(WarningType.Battery, DataSource.DataModel.BatteryLight);
+            Fuel = new Warning(WarningType.Fuel, DataSource.DataModel.FuelLevelLight);
+            Engine = new Warning(WarningType.Engine, DataSource.DataModel.CheckEngine);
+            Brake = new Warning(WarningType.Brake, DataSource.DataModel.BrakeLight);
+
+            HighBeam = new(IndicatorType.HighBeam, DataSource.DataModel.HighBeamLight);
+            Left = new(IndicatorType.Left, DataSource.DataModel.IndicatorLeft);
+            Right = new(IndicatorType.Right, DataSource.DataModel.IndicatorRight);
+
+            DataSource.Start();
         }
 
         private void Logger_MessageReceived(object? sender, MessageEventArgs e)
@@ -49,73 +77,10 @@ namespace DashCAN.ViewModel
             Messages.Add(e.Message);
         }
 
-        private void Timer_Tick(object? sender, object e)
-        {
-            if (DataSource == DataSource.Demo)
-            {
-                UpdateDemo();
-                DemoValue += DemoIncrement;
-                if (DemoValue >= 100 || DemoValue <= 0)
-                {
-                    DemoIncrement *= -1;
-                    Logger.Log(LogLevel.Information, "Reverse!");
-                }
-            }
-            else if (DataSource == DataSource.CanBus)
-            {
-                UpdateCAN();
-            }
-        }
-
-        private void UpdateCAN()
-        {
-            if (CanReader == null) return;
-
-            AnalogTacho.SetValue(CanReader.DataModel.RPM);
-            Tachometer.SetValue(CanReader.DataModel.RPM);
-            AnalogSpeed.SetValue(CanReader.DataModel.VehicleSpeed);
-            VehicleSpeed.SetValue(CanReader.DataModel.VehicleSpeed);
-            FuelLevel.SetValue(CanReader.DataModel.FuelLevel);
-            CoolantTemperature.SetValue(CanReader.DataModel.CoolantTemp);
-            //HighBeam.SetValue(CanReader.DataModel.HighBeam);
-            //Left.SetValue(CanReader.DataModel.LeftIndicator);
-            //Right.SetValue(CanReader.DataModel.RightIndicator);
-
-            Engine.SetValue(CanReader.DataModel.CheckEngine);
-            Oil.SetValue(CanReader.DataModel.OilPressureLight);
-            Battery.SetValue(CanReader.DataModel.BatteryLight);
-            //DoorOpen.SetValue(CanReader.DataModel.DoorOpenLight);
-            //ParkBrake.SetValue(CanReader.DataModel.ParkBrakeLight);
-            //Fuel.SetValue(CanReader.DataModel.FuelWarningLight);
-            //Brake.SetValue(CanReader.DataModel.BrakeWarningLight);
-        }
-
-        private void UpdateDemo()
-        {
-            AnalogTacho.Value = DemoValue * 80;
-            Tachometer.Value = (int)DemoValue * 80;
-            AnalogSpeed.Value = DemoValue * 2.2m;
-            VehicleSpeed.Value = (int)(DemoValue * 2.0m);
-            FuelLevel.Value = DemoValue;
-            CoolantTemperature.Value = DemoValue * 2;
-            HighBeam.Value = (DemoValue % 40 > 20);
-            Left.Value = (DemoValue % 10 > 5);
-            Right.Value = (DemoValue % 10 > 5);
-
-            DoorOpen.Value = ((DemoValue + 0) % 10 > 5);
-            ParkBrake.Value = ((DemoValue + 1) % 10 > 5);
-            Oil.Value = ((DemoValue + 2) % 10 > 5);
-            Battery.Value = ((DemoValue + 3) % 10 > 5);
-            Fuel.Value = ((DemoValue + 4) % 10 > 5);
-            Engine.Value = ((DemoValue + 5) % 10 > 5);
-            Brake.Value = ((DemoValue + 6) % 10 > 5);
-        }
-
         public void Dispose()
         {
-            Timer?.Stop();
-            CanReader?.Stop();
-            CanReader?.Dispose();
+            DataSource?.Stop();
+            (DataSource as IDisposable)?.Dispose();
         }
 
         public static Brush BackgroundBrush
@@ -128,52 +93,54 @@ namespace DashCAN.ViewModel
             get { return Helpers.Brushes.SegmentLit; }
         }
 
-        public Dial AnalogTacho { get; set; } = new(Unit.RPM);
+        public Dial AnalogTacho { get; private set; }
 
-        public DigiTacho Tachometer { get; set; } = new(Unit.RPM);
+        public DigiTacho Tachometer { get; private set; }
 
-        public Dial AnalogSpeed { get; set; } = new(Unit.Kmh);
+        public Dial AnalogSpeed { get; private set; }
 
-        public SevenSegmentGroup VehicleSpeed { get; set; } = new(Unit.Kmh, 3);
+        public SevenSegmentGroup VehicleSpeed { get; private set; }
 
-        public StackBar FuelLevel { get; set; } = new(Unit.Litre, true, false, "E", "F", 0, 65);
+        public StackBar FuelLevel { get; private set; }
 
-        public StackBar CoolantTemperature { get; set; } = new(Unit.Celcius, false, true, "C", "H", 0, 150);
+        public StackBar CoolantTemperature { get; private set; }
 
-        public Indicator HighBeam { get; set; } = new(IndicatorType.HighBeam);
+        public Indicator HighBeam { get; private set; } 
 
-        public Indicator Left { get; set; } = new(IndicatorType.Left);
+        public Indicator Left { get; private set; } 
 
-        public Indicator Right { get; set; } = new(IndicatorType.Right);
+        public Indicator Right { get; private set; } 
 
-        public Warning DoorOpen { get; set; } = new Warning(WarningType.DoorOpen);
+        public Warning DoorOpen { get; private set; } 
 
-        public Warning ParkBrake { get; set; } = new Warning(WarningType.ParkBrake);
+        public Warning ParkBrake { get; private set; } 
 
-        public Warning Oil { get; set; } = new Warning(WarningType.Oil);
+        public Warning Oil { get; private set; } 
 
-        public Warning Battery { get; set; } = new Warning(WarningType.Battery);
+        public Warning Battery { get; private set; } 
 
-        public Warning Fuel { get; set; } = new Warning(WarningType.Fuel);
+        public Warning Fuel { get; private set; } 
 
-        public Warning Engine { get; set; } = new Warning(WarningType.Engine);
+        public Warning Engine { get; private set; } 
 
-        public Warning Brake { get; set; } = new Warning(WarningType.Brake);
+        public Warning Brake { get; private set; } 
 
-        public ObservableCollection<Tuple<LogLevel, string>> Messages { get; set; } = new();
-    }
-
-    public enum DataSource
-    {
-        Demo,
-        CanBus
+        public ObservableCollection<Tuple<LogLevel, string>> Messages { get; private set; } = new();
     }
 
     public class MessageLogger : ILogger
     {
+        public MessageLogger()
+        {
+#if HAS_UNO
+            HasConsole = true;
+#endif
+        }
+
         public List<Tuple<LogLevel, string>> Messages { get; private set; } = new();
         public event EventHandler<MessageEventArgs>? MessageReceived;
         public object _MessageLock = new();
+        private bool HasConsole { get; set; }
 
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default!;
 
@@ -189,35 +156,38 @@ namespace DashCAN.ViewModel
             MessageReceived?.Invoke(this, new MessageEventArgs(message));
             System.Diagnostics.Debug.WriteLine(message.Item2);
 
-            lock (_MessageLock)
+            if (HasConsole)
             {
-                if (logLevel == LogLevel.Error)
+                lock (_MessageLock)
                 {
-                    Console.SetCursorPosition(0, 7);
-                    Console.ForegroundColor = ConsoleColor.Red;
+                    if (logLevel == LogLevel.Error)
+                    {
+                        Console.SetCursorPosition(0, 7);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    else if (logLevel == LogLevel.Warning)
+                    {
+                        Console.SetCursorPosition(0, 6);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    }
+                    else if (logLevel == LogLevel.Information)
+                    {
+                        Console.SetCursorPosition(0, 5);
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                    }
+                    else if (logLevel == LogLevel.Debug)
+                    {
+                        Console.SetCursorPosition(0, 4);
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                    }
+                    else
+                    {
+                        Console.SetCursorPosition(0, 3);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                    Console.Write(message.Item2);
+                    Console.ResetColor();
                 }
-                else if (logLevel == LogLevel.Warning)
-                {
-                    Console.SetCursorPosition(0, 6);
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
-                }
-                else if (logLevel == LogLevel.Information)
-                {
-                    Console.SetCursorPosition(0, 5);
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                }
-                else if (logLevel == LogLevel.Debug)
-                {
-                    Console.SetCursorPosition(0, 4);
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                }
-                else
-                {
-                    Console.SetCursorPosition(0, 3);
-                    Console.ForegroundColor = ConsoleColor.White;
-                }
-                Console.Write(message.Item2);
-                Console.ResetColor();
             }
         }
     }
