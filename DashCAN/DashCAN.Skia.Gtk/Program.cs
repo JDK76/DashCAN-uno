@@ -1,6 +1,5 @@
 using GLib;
-using System;
-using Uno.UI.Runtime.Skia;
+using Uno.UI.Runtime.Skia.Gtk;
 
 namespace DashCAN.Skia.Gtk
 {
