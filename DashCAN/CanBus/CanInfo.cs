@@ -35,7 +35,7 @@ namespace DashCAN.CanBus
             }
 
             var methodName = $"Parse{canId:X3}";
-            var method = GetType().GetMethod(methodName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, new Type[] { typeof(CanInfo) });
+            var method = GetType().GetMethod(methodName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic, new Type[] { typeof(DataModel) });
             if (method == null) Logger.LogError("No method '{methodName}' in {type}", methodName, GetType().Name);
             method?.Invoke(this, new object[] { model });
         }
