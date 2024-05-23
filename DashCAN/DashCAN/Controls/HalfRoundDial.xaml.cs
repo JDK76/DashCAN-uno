@@ -96,32 +96,48 @@ namespace DashCAN.Controls
                         VerticalAlignment = VerticalAlignment.Center,
                         TextAlignment = TextAlignment.Center,
                         Foreground = new SolidColorBrush(Colors.White),
-                        //FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_condensed_bt.ttf#Square721 Cn BT"),
                         FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_bold.otf#Square 721"),
                         FontSize = 80,
-                        //FontWeight = FontWeights.ExtraBold,
                         Text = (i / LabelMultiplier).ToString()
                     };
                     txt.Measure(new Size(0, 0));
                     var point = GetRadiusPoint(DialCentrePoint, outerRad * 0.9 - txt.ActualWidth * 0.6, degrees);
-                    //canvas.Children.Add(new Ellipse()
-                    //{
-                    //    Fill = new SolidColorBrush(Colors.Red),
-                    //    Width = 4,
-                    //    Height = 4,
-                    //    Margin = new Thickness(point.X - 2, point.Y - 2, 0, 0)
-                    //});
                     txt.Margin = new Thickness(point.X - txt.ActualWidth / 2, point.Y - txt.ActualHeight / 2, 0, 0);
                     canvas.Children.Add(txt);
                 }
             }
 
+            // Unit label
+            var unitLabel = new TextBlock()
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center,
+                TextAlignment = TextAlignment.Center,
+                Foreground = new SolidColorBrush(Colors.White),
+                FontFamily = new FontFamily("ms-appx:///DashCAN/Assets/Fonts/square_721_bt.ttf#Square721 BT"),
+                FontSize = 60,
+                Text = VM?.Label
+            };
+            unitLabel.Measure(new Size(0, 0));
+            unitLabel.Margin = new Thickness(DialCentrePoint.X - unitLabel.ActualWidth / 2, DialCentrePoint.Y * 0.6, 0, 0);
+            canvas.Children.Add(unitLabel);
+
             // Pointer
             var zeroPoint = new Point(DialCentrePoint.X - ((double)outerRad * 0.95), DialCentrePoint.Y);
+            var midPoint = zeroPoint.X + (DialCentrePoint.X - zeroPoint.X) / 3.3;
             canvas.Children.Add(new Polygon()
             {
                 Fill = new SolidColorBrush(Colors.Orange),
-                Points = { new Point(DialCentrePoint.X, DialCentrePoint.Y + 20), zeroPoint, new Point(DialCentrePoint.X, DialCentrePoint.Y - 20) },
+                Points = { 
+                    new Point(zeroPoint.X, zeroPoint.Y - 7.5),
+                    new Point(zeroPoint.X, zeroPoint.Y + 7.5),
+                    new Point(midPoint, zeroPoint.Y + 7.5),
+                    new Point(midPoint + 15, DialCentrePoint.Y + 15), 
+                    new Point(DialCentrePoint.X + 100, DialCentrePoint.Y + 15), 
+                    new Point(DialCentrePoint.X + 100, DialCentrePoint.Y - 15),
+                    new Point(midPoint + 15, DialCentrePoint.Y - 15), 
+                    new Point(midPoint, zeroPoint.Y - 7.5)
+                },
                 RenderTransform = DialPointerTransform
             });
         }

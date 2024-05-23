@@ -49,9 +49,9 @@ namespace DashCAN.ViewModel
                 consoleTimer.Start();
             }
 
-            AnalogTacho = new(Unit.RPM, DataSource.DataModel.RPM);
+            AnalogTacho = new(Unit.RPM, DataSource.DataModel.RPM, "x1000r/min");
             Tachometer = new(Unit.RPM, DataSource.DataModel.RPM);
-            AnalogSpeed = new(Unit.Kmh, DataSource.DataModel.VehicleSpeed);
+            AnalogSpeed = new(Unit.Kmh, DataSource.DataModel.VehicleSpeed, "km/h");
             VehicleSpeed = new(Unit.Kmh, DataSource.DataModel.VehicleSpeed, 3);
             FuelLevel = new(Unit.Litre, DataSource.DataModel.FuelLevel, true, false, "E", "F", 0, 65);
             CoolantTemperature = new(Unit.Celcius, DataSource.DataModel.CoolantTemp, false, true, "C", "H", 0, 150);
