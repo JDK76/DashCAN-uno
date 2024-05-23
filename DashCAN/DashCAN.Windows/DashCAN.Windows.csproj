@@ -58,7 +58,7 @@
 		package has not yet been restored.
 	-->
 	<ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-		<ProjectCapability Include="Msix"/>
+		<ProjectCapability Include="Msix" />
 	</ItemGroup>
 
 	<!-- 
@@ -71,4 +71,11 @@
 	</PropertyGroup>
 
 	<Import Project="..\DashCAN.Base\base.props" />
+
+	<ItemGroup>
+	  <PackageReference Update="Uno.Resizetizer">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
 </Project>

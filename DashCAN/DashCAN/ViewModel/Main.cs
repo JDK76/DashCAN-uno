@@ -39,17 +39,16 @@ namespace DashCAN.ViewModel
                     {
                         Console.SetCursorPosition(0, 1);
                         Console.Write($"Temp: {DataSource.DataModel.CoolantTemp.Value:000.0} | Accel: {DataSource.DataModel.AcceleratorPedal.Value:000.0} | Fuel: {DataSource.DataModel.FuelLevel.Value:000.0} | RPM: {(int)DataSource.DataModel.RPM.Value:00000}");
+                        //if (DataSource is CanReader reader)
+                        //{
+                        //    Console.SetCursorPosition(0, 1);
+                        //    Console.Write($"Unique IDs: {string.Join(" - ", reader.ObservedCanIds.Order().Select(i => i.ToString("x")))}");
+                        //}
                     }
                 };
                 consoleTimer.Start();
             }
 
-            Logger.LogInformation("Startup for {source}", DataSourceType);
-            Start();
-        }
-
-        private void Start()
-        {
             AnalogTacho = new(Unit.RPM, DataSource.DataModel.RPM);
             Tachometer = new(Unit.RPM, DataSource.DataModel.RPM);
             AnalogSpeed = new(Unit.Kmh, DataSource.DataModel.VehicleSpeed);
